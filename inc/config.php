@@ -67,7 +67,7 @@ define(         'FN_CACHE_SILLAJ', FN_ROOT_DIR_SILLAJ .'cache/');
 define(     'URL_ROOT_DIR_SILLAJ', dirname($_SERVER['PHP_SELF']) == '/' ? '/' : dirname($_SERVER['PHP_SELF']) .'/');
 define(        'URL_CACHE_SILLAJ', URL_ROOT_DIR_SILLAJ .'cache/');
 define(   'STR_APPLI_NAME_SILLAJ', 'Sillaj');
-define('STR_APPLI_VERSION_SILLAJ', '0.2.13');
+define('STR_APPLI_VERSION_SILLAJ', '0.2.14');
 define(       'STR_AUTHOR_SILLAJ', 'Michaël Delorme');
 define( 'STR_AUTHOR_EMAIL_SILLAJ', 'sillaj@gmail.com');
 define(       'BOO_OS_WIN_SILLAJ', strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');  // find OS so we can chose which locale format to use
