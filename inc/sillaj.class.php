@@ -646,7 +646,7 @@ class Task {
         global $db;
         
         // Check input values
-        $arrInput = $this->checkInput();
+        $arrInput = $this->checkInput();        
         
         // Add to the task table
         $db->query('BEGIN');
@@ -1024,8 +1024,15 @@ class Event {
     function add() {
         global $db;
         
+        // if we have +d in timEnd we will add 2 events : before and after
+        // midnight
+        if (strstr($_POST['timEnd'], '+d') != false) {
+            $timEnd2 = str_replace('+d', '', $_POST['timEnd']);
+            $_POST['timEnd'] = '24:00';  
+        }
+        
         $arrInput = $this->checkInput();
-
+                        
         $arrEvent = $db->query("
           INSERT INTO sillaj_event (
             sillaj_task_intTaskId,
@@ -1051,6 +1058,46 @@ class Event {
         
         if (DB::isError($arrEvent)) {
             raiseError($arrEvent->getMessage());
+        }
+        
+        // add task after midnight
+        if (isset($timEnd2)) {
+        
+            // Add one day to the submitted date
+            $arrDate = explode('-', $_POST['datEvent']); 
+            $ts = mktime(0, 0, 0, $arrDate[1], $arrDate[2]+1, $arrDate[0]);
+            $strDate = date('Y-m-d', $ts);
+
+            $timDuration = "SEC_TO_TIME(TIME_TO_SEC('". $this->createMaketime($timEnd2) ."') - TIME_TO_SEC('". $this->createMaketime('00:00') ."'))";
+            
+            // query
+            $arrEvent = $db->query("
+              INSERT INTO sillaj_event (
+                sillaj_task_intTaskId,
+                sillaj_project_intProjectId,
+                sillaj_user_strUserId,
+                timStart, 
+                timEnd,
+                timDuration,
+                datEvent,
+                strRem
+              )
+              VALUES (
+                ". $_POST['intTaskId'] .",
+                ". $_POST['intProjectId'] .",
+                '". $_SESSION['strUserId'] ."',
+                '00:00',
+                '". $this->createMaketime($timEnd2). "',
+                $timDuration,
+                '$strDate',
+                '". $arrInput['strRem'] ."'
+              )"
+            );
+            
+            if (DB::isError($arrEvent)) {
+                raiseError($arrEvent->getMessage());
+            }
+            return STR_EVENT_CREATED_SILLAJ .' '. STR_EVENT_CREATED_2DAYS_SILLAJ;
         }
               
         return STR_EVENT_CREATED_SILLAJ;

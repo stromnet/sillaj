@@ -67,6 +67,7 @@ define(     'STR_MISSING_EMAIL_SILLAJ', 'You must provide a valid email address'
 
 // class Event
 define(         'STR_EVENT_CREATED_SILLAJ', 'Event created');
+define(   'STR_EVENT_CREATED_2DAYS_SILLAJ', '(on two days)');
 define(      'STR_NO_TASK_SELECTED_SILLAJ', 'No task selected');
 define(   'STR_NO_PROJECT_SELECTED_SILLAJ', 'No project selected');
 define(         'STR_NO_TIME_INPUT_SILLAJ', 'No duration input');

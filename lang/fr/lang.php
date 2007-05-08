@@ -69,6 +69,7 @@ define(     'STR_MISSING_EMAIL_SILLAJ', 'Vous devez fournir une adresse de courr
 
 // class Event
 define(         'STR_EVENT_CREATED_SILLAJ', 'Événement créé');
+define(   'STR_EVENT_CREATED_2DAYS_SILLAJ', '(sur deux jours)');
 define(      'STR_NO_TASK_SELECTED_SILLAJ', "Pas d'activité sélectionnée");
 define(   'STR_NO_PROJECT_SELECTED_SILLAJ', 'Pas de projet sélectionné');
 define(         'STR_NO_TIME_INPUT_SILLAJ', "Pas d'information de durée entrée");

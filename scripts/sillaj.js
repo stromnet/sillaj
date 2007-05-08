@@ -72,16 +72,23 @@ function frmEvent_onsubmit(f) {
         return false;
     }   
     
-    // if a start time input is h:mm and end time is hh:mm, it will trigger an error (because of string comparaison)
+    // if a start time input is h:mm and end time is hh:mm, it will trigger an 
+    // error (because of string comparaison)
     // so we add a 0 before single digit hours
     var splitStr = /[-:,; ]/g;
     var stmp = s.split(splitStr);
     if (stmp[0].length == 1) {
-        s =+ '0';
+        s = '0' + s;
     }
-    
+
+    var stmp = e.split(splitStr);
+    if (stmp[0].length == 1) {
+        e = '0' + e;
+    }
+
     // check if start time is before end time
-    if ((d == '') && (e < s)) {
+    // except if we have +d in the end date (it means it's the next day)
+    if ((d == '') && (e < s) && (e.indexOf('+d') == -1)) {
         f.timStart.focus();
         alert(badTimeInterval +' '+ e +' < '+ s);
         return false;

@@ -70,6 +70,7 @@ define(     'STR_MISSING_EMAIL_SILLAJ', 'Es muss eine gütige eMail Adresse angeg
 
 // class Event
 define(         'STR_EVENT_CREATED_SILLAJ', 'Ereignis erzeugt');
+define(   'STR_EVENT_CREATED_2DAYS_SILLAJ', '(mit zwei Tagen)');
 define(      'STR_NO_TASK_SELECTED_SILLAJ', 'Keine Tätigkeit gewählt');
 define(   'STR_NO_PROJECT_SELECTED_SILLAJ', 'Kein Projekt gewählt');
 define(  'STR_NO_CUSTOMER_SELECTED_SILLAJ', 'Kein Kunde gewählt');

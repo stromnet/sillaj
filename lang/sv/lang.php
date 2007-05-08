@@ -69,6 +69,7 @@ define(     'STR_MISSING_EMAIL_SILLAJ', 'Du måste ange en giltig email-adress');
 
 // class Event
 define(         'STR_EVENT_CREATED_SILLAJ', 'Händelse skapd');
+define(   'STR_EVENT_CREATED_2DAYS_SILLAJ', '(on two days)');
 define(      'STR_NO_TASK_SELECTED_SILLAJ', 'Ingen uppgift vald');
 define(   'STR_NO_PROJECT_SELECTED_SILLAJ', 'Inget projekt valt');
 define(         'STR_NO_TIME_INPUT_SILLAJ', 'Ingen längd angiven');
