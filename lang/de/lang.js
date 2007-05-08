@@ -5,7 +5,7 @@ noTaskSelected = 'Keine Taetigkeit ausgewaehlt';
 noTimeInput = 'Keine Dauer : Entweder eine Dauer oder Start und Endezeit angeben';
 noEventSelected = 'Kein Ereignis ausgewaehlt';
 confirmDeleteEvent = 'Wollen sie wirklich das ausgewaehlte Ereignis loeschen ?';
-badTimeInterval = 'Ende vor Anfang !';
+badTimeInterval = 'Ende vor Anfang !\n(add \'+d\' after the end time to span onto the next day';
 
 // project
 noProjectName = 'Kein Projektname';

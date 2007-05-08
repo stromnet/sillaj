@@ -90,7 +90,7 @@ function frmEvent_onsubmit(f) {
     // except if we have +d in the end date (it means it's the next day)
     if ((d == '') && (e < s) && (e.indexOf('+d') == -1)) {
         f.timStart.focus();
-        alert(badTimeInterval +' '+ e +' < '+ s);
+        alert(e +' < '+ s +' : '+ badTimeInterval);
         return false;
     }
 }

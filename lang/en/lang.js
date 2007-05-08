@@ -5,7 +5,7 @@ noTaskSelected = 'No task selected';
 noTimeInput = 'No duration : input a duration or a start and end time';
 noEventSelected = 'No event selected';
 confirmDeleteEvent = 'Are you sure you really want to delete the selected event ?';
-badTimeInterval = 'End before start !';
+badTimeInterval = 'End before start !\n(add \'+d\' after the end time to span onto the next day)';
 
 // project
 noProjectName = 'No project name';

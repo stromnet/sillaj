@@ -5,7 +5,7 @@ noTaskSelected = 'Ingen uppgift vald';
 noTimeInput = 'Ingen längd : mata in längd eller start- och stopptid';
 noEventSelected = 'Ingen händelse vald';
 confirmDeleteEvent = 'Är du säker på att du vill ta bort den valda händelsen?';
-badTimeInterval = 'Slut för start!';
+badTimeInterval = 'Slut för start!\n(add \'+d\' after the end time to span onto the next day';
 
 // project
 noProjectName = 'Inget projektnamn';

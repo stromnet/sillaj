@@ -5,7 +5,7 @@ noTaskSelected = 'Pas d\'activité sélectionné';
 noTimeInput = 'Pas de temps : choisisez une durée ou une heure de début et de fin';
 noEventSelected = 'Pas d\'événement sélectionné';
 confirmDeleteEvent = 'Voulez-vous vraiment supprimer l\'événénement sélectionné ?';
-badTimeInterval = 'Fin avant début !';
+badTimeInterval = 'Fin avant début !\n(ajouter \'+d\' à l\'heure de fin pour finir sur le jour suivant)';
 
 // project
 noProjectName = 'Pas de nom de projet';
