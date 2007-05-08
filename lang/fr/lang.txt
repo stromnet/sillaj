@@ -46,6 +46,8 @@ xhtmlValid = Site Valide XHTML 1.1
 cssValid = Site valide CSS 3.0
 accessValid = Accessibilité vérifiée
 for = pour
+rssFeed = Flux RSS
+atomFeed = Flux Atom
 
 sumWorked = Total
 project = Projet
@@ -90,7 +92,6 @@ labTimDuration = D<span class="accesskey">u</span>rée
 accTimDuration = u
 sumEvent = Événements
 sumByDay = Total du jour
-rssFeed = Fil RSS
 
 [login]
 aCreateAccount = Créer un compte

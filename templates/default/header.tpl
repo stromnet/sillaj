@@ -2,9 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$smarty.session.strLocale}" lang="{$smarty.session.strLocale}">
 <head>
-<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-type" content="text/html; charset={$smarty.const.STR_CHARSET_SILLAJ}" />
 <meta http-equiv="Content-language" content="{$smarty.session.strLocale}" />
-<meta name="revisit-after" content="7 days" />
 <meta name="description" content="{$smarty.const.STR_META_DESCRIPTION_SILLAJ}" />
 <meta name="keywords" content="{$smarty.const.STR_META_KEYWORDS_SILLAJ}" />
 <meta name="author" content="{if empty($smarty.session.strEmail)}{$smarty.const.STR_ADMIN_EMAIL_SILLAJ}{else}{$smarty.session.strEmail}{/if}" />
@@ -23,15 +22,14 @@
 <link rel="alternate stylesheet" type="text/css" href="{$urlThemeDir}styles/{$arrCss[i].fnCss}" media="all" title="{#theme#} {$arrCss[i].strNameCss}" />
 {/section}
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/print.css" media="print" />
-{if basename($smarty.server.SCRIPT_NAME) != 'login.php'}<link rel="alternate" type="text/xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="RSS" />
-{/if}{if basename($smarty.server.SCRIPT_NAME) == 'index.php'}
+{if basename($smarty.server.SCRIPT_NAME) != 'login.php'}<link rel="alternate" type="application/atom+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}atom.php?strUserId={$smarty.session.strUserId}" title="{#atomFeed#}" />
+<link rel="alternate" type="application/rss+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="{#rssFeed#}" />{/if}{if basename($smarty.server.SCRIPT_NAME) == 'index.php'}
 <link rel="start" href="?datEvent={$smarty.now|date_format:'%Y-%m-%d'}" title="{#liToday#}" />
 <link rel="prev" href="?datEvent={$datYesterday}" title="{#dayPrev#}" />
 <link rel="next" href="?datEvent={$datTomorrow}" title="{#dayNext#}" />
 {/if}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}lang/{$smarty.session.strLocale}/lang.js"></script>    
 <script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/sillaj.js"></script>
 {if ! empty($booCal)}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/CalendarPopup.js"></script>
-<!-- compliance patch for microsoft browsers --><!--[if lt IE 7]><script src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/ie7/ie7-standard-p.js" type="text/javascript"></script><![endif]-->
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/calendar.css" media="screen" />{/if}
 </head>
 <body{if $strOnload} onload="{$strOnload}"{/if}>

@@ -2,7 +2,7 @@
 /**
 * Build a RSS feed
 */
-header('Content-Type: text/xml');
+header('Content-Type: application/rss+xml');
 
 if (empty($_GET['strUserId'])) {
     exit;

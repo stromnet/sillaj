@@ -55,5 +55,8 @@
   <a href="rss.php?strUserId={$smarty.session.strUserId}" title="{$smarty.const.STR_SITE_NAME_SILLAJ} {#for#} {$smarty.session.strUserId} ({#rssFeed#})">
     <img src="{$urlImgDir}ico_rss.png" alt="RSS" height="15" width="80" />
   </a>
+  <a href="atom.php?strUserId={$smarty.session.strUserId}" title="{$smarty.const.STR_SITE_NAME_SILLAJ} {#for#} {$smarty.session.strUserId} ({#atomFeed#})">
+    <img src="{$urlImgDir}ico_atom.png" alt="Atom" height="15" width="80" />
+  </a>
 </p>
 {include file='footer.tpl'}

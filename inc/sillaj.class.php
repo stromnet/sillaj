@@ -975,7 +975,7 @@ class Event {
     }
     
     /**
-     * Get the last n events for one user
+     * Get the last n events for one user for RSS and Atom
      */   
     function getLastItems($strUserId, $intItems = INT_RSS_MAX_ITEM_SILLAJ) {
         global $db;
@@ -984,24 +984,26 @@ class Event {
             raiseError('No user');
         }
         
-        if ($_SESSION['booUseShare']) {
+        /*if ($_SESSION['booUseShare']) {
             $strProject = "CASE WHEN sillaj_project.booShare = '1' THEN CONCAT('* ', strProject) ELSE strProject END AS strProject";
             $strTask = "CASE WHEN sillaj_task.booShare = '1' THEN CONCAT('* ', strTask) ELSE strTask END AS strTask";            
         }
-        else {
+        else { */
             $strProject = "strProject AS strProject";
             $strTask = "strTask AS strTask";  
-        }
+        //}
         
         $arrEvent = $db->getAll("
           SELECT
             intEventId,
             $strTask,
             $strProject,
+            sillaj_project.intProjectId,
             TIME_FORMAT(timStart, '%H:%i') AS timStart,
             TIME_FORMAT(timEnd, '%H:%i') AS timEnd,
             TIME_FORMAT(timDuration, '%H:%i') AS timDuration,
-            UNIX_TIMESTAMP(CONCAT(datEvent, ' ', IFNULL(timStart, '00:00:00'))) AS datEvent,            
+            UNIX_TIMESTAMP(CONCAT(datEvent, ' ', IFNULL(timStart, '00:00:00'))) AS datEvent,
+            UNIX_TIMESTAMP(sillaj_event.datUpdate) AS datUpdate,            
             sillaj_event.strRem
           FROM sillaj_event
             LEFT JOIN sillaj_task on (intTaskId = sillaj_event.sillaj_task_intTaskId)            
@@ -2124,7 +2126,7 @@ class Sillaj {
      * ignoring the compulsory themes (default.css and print.css and calendar.css)
      */
     function getCss() {
-        $tmp = $this->listFile(FN_ROOT_DIR_SILLAJ . 'templates/' . $_SESSION['strThemeName'] . '/styles/');
+        $tmp = $this->listFile(FN_ROOT_DIR_SILLAJ . 'templates/' . $_SESSION['strThemeName'] . '/styles/', 'css');
         $arrCss = array(); 
         foreach ($tmp as $strCss) {
             if (!in_array($strCss, array('default.css', 'print.css', 'calendar.css'))) {
@@ -2156,14 +2158,16 @@ class Sillaj {
     /**
      * list files in a directory
      */
-    function listFile($fnDir) {
+    function listFile($fnDir, $strExt = '') {
         $arrFile = array();
         
         if (is_dir($fnDir)) {
             if ($hdl = opendir($fnDir)) {        
                 while (($file = readdir($hdl)) !== false) {           
-                    if ($file != '.' && $file != '..' && !is_dir($fnDir . $file)) {                 
-                            $arrFile[] = $file;                              
+                    if ($file != '.' && $file != '..' && !is_dir($fnDir . $file)) {   
+                        if (($strExt == '') || preg_match("/\.". $strExt ."$/i", $file)) {            
+                            $arrFile[] = $file;
+                        }                           
                     }      
                 }
                 closedir($hdl);

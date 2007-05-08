@@ -46,6 +46,8 @@ xhtmlValid = Valid XHTML 1.1
 cssValid = Valid CSS 3.0
 accessValid = Tillgägnlighet kollad
 for = för
+rssFeed = RSS-flöde
+atomFeed = Atom-flöde
 
 project = Projekt
 task = Uppgift
@@ -91,7 +93,6 @@ labTimDuration = <span class="accesskey">L</span>ängd
 accTimDuration = l
 sumEvent = Händelse
 sumByDay = Dagssumma
-rssFeed = RSS-flöde
 
 [login]
 aCreateAccount = Skapa ett konto

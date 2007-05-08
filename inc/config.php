@@ -71,6 +71,7 @@ define('STR_APPLI_VERSION_SILLAJ', '0.2.14');
 define(       'STR_AUTHOR_SILLAJ', 'Michaël Delorme');
 define( 'STR_AUTHOR_EMAIL_SILLAJ', 'sillaj@gmail.com');
 define(       'BOO_OS_WIN_SILLAJ', strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');  // find OS so we can chose which locale format to use
+define(      'STR_CHARSET_SILLAJ', 'iso-8859-1');
 
 // if pear is not found globally (in the include_path) we can try to add 
 // the bundled version to the include_path :

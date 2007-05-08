@@ -48,6 +48,8 @@ xhtmlValid = Gültiges XHTML 1.1
 cssValid = Gültiges CSS 3.0
 accessValid = Zugänglichkeit geprüft
 for = für
+rssFeed = RSS feed
+atomFeed = Atom feed
 
 project = Projekt
 task = Tätigkeit
@@ -96,7 +98,6 @@ labTimDuration = Da<span class="accesskey">u</span>er
 accTimDuration = u
 sumEvent = Ereignis
 sumByDay = Tages Summe
-rssFeed = RSS feed
 
 [login]
 aCreateAccount = Account erstellen
