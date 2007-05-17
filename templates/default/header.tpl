@@ -32,7 +32,7 @@
 {if ! empty($booCal)}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/CalendarPopup.js"></script>
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/calendar.css" media="screen" />{/if}
 </head>
-<body{if $strOnload} onload="{$strOnload}"{/if}>
+<body{if ! empty($strOnload)} onload="{$strOnload}"{/if}>
   <div id="header">
     <a href="{$smarty.const.URL_ROOT_DIR_SILLAJ}" title="{#appliHome#}">
       <img src="{$urlImgDir}logo_sillaj.png" width="64" height="70" id="logo" alt="{$smarty.const.STR_APPLI_NAME_SILLAJ}" />

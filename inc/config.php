@@ -60,10 +60,10 @@ $arrLanguageNameLookup = array(
 );
 
 // Application internals 
-define(        'BOO_DEBUG_SILLAJ', false);
+define(        'BOO_DEBUG_SILLAJ', true);
 define(      'FN_ROOT_DIR_SILLAJ', dirname($_SERVER['SCRIPT_FILENAME']) .'/');
 define(         'FN_CACHE_SILLAJ', FN_ROOT_DIR_SILLAJ .'cache/');
-// finding public path. take care if installed directly in the documentroot whereas in a subdir
+// finding public path. It takes care if installed directly in the documentroot whereas in a subdir
 define(     'URL_ROOT_DIR_SILLAJ', dirname($_SERVER['PHP_SELF']) == '/' ? '/' : dirname($_SERVER['PHP_SELF']) .'/');
 define(        'URL_CACHE_SILLAJ', URL_ROOT_DIR_SILLAJ .'cache/');
 define(   'STR_APPLI_NAME_SILLAJ', 'Sillaj');
@@ -171,6 +171,10 @@ function raiseError($strErrorMessage) {
     global $smarty;
 
     $smarty->assign('strContent', '<p class="error">'. $strErrorMessage .'</p>');
+    
+    /*if (!$_SESSION['booIsAuthent']) {
+        $smarty->assign('booDisplayMenu', false);
+    }*/
     
     // use a default page title if not assigned before
     if (is_null($smarty->get_template_vars('strPageTitle'))) {

@@ -6,7 +6,7 @@
  * cookies so I can never get a hold on the PHPSESSID cookie)
  *   
  */
-header('Content-Type: text/javascript; charset=iso-8859-1');
+header('Content-Type: text/javascript; charset='. STR_CHARSET_SILLAJ);
 require('./inc/config.php');
 // Validate form
 if (count($_POST)) {

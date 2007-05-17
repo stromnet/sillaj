@@ -2126,7 +2126,10 @@ class Sillaj {
      * ignoring the compulsory themes (default.css and print.css and calendar.css)
      */
     function getCss() {
+        // search CSS files in current template dir
         $tmp = $this->listFile(FN_ROOT_DIR_SILLAJ . 'templates/' . $_SESSION['strThemeName'] . '/styles/', 'css');
+        
+        // prune system files
         $arrCss = array(); 
         foreach ($tmp as $strCss) {
             if (!in_array($strCss, array('default.css', 'print.css', 'calendar.css'))) {

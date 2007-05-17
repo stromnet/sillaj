@@ -17,35 +17,41 @@ if (count($_GET) == 0) {
         $smarty->assign_by_ref('arrUser', $user->get());
     }        
     
-    // prepare the list of months name (for js calendar)
+    // current year and month (for the following calculations)
+    $intCurYear  = date('Y');
+    $intCurMonth = date('n');
+    $intCurDay   = date('j');
+    $intCurWeek  = date('w');
+    
+    // prepare the list of months name (for js calendar) - local language
     $arrMonthNames = array();
-    for($i=2;$i<=13;$i++) { 
-        $arrMonthNames[] = strftime('%B', mktime(0, 0, 0, $i, 0, 0));
+    for($i=1;$i<=12;$i++) {
+        $arrMonthNames[] = strftime('%B', mktime(0, 0, 0, $i, 1, $intCurYear));
     }
 
-    // prepare the list of weekday first letters (for js calendar)
+    // prepare the list of weekday first letters (for js calendar) in local language
     $arrDayIni = array();
     for($i=0;$i<=6;$i++) { 
-        $arrDayIni[] = strtoupper(substr(strftime('%A', mktime(0, 0, 0, 2, $i - 1 + INT_START_WEEK_DAY_SILLAJ, 0)), 0, 1));
+        $arrDayIni[] = strtoupper(substr(strftime('%A', mktime(0, 0, 0, 2, $i - 1 + INT_START_WEEK_DAY_SILLAJ, $intCurYear)), 0, 1));
     }
     
     // Prepare dates to populate date field according to the buttons click
-    $smarty->assign_by_ref( 'datStartPreviousWeek', mktime(0, 0, 0, date('n'), date('j') - date('w') + INT_START_WEEK_DAY_SILLAJ - 7, date('Y')));
-    $smarty->assign_by_ref(   'datEndPreviousWeek', mktime(23, 59, 59, date('n'), date('j') + (6 - date('w')) + INT_START_WEEK_DAY_SILLAJ - 7, date('Y')));
-    $smarty->assign_by_ref(  'datStartCurrentWeek', mktime(0, 0, 0, date('n'), date('j') - date('w') + INT_START_WEEK_DAY_SILLAJ, date('Y')));
-    $smarty->assign_by_ref(    'datEndCurrentWeek', mktime(23, 59, 59, date('n'), date('j') + (6 - date('w')) + INT_START_WEEK_DAY_SILLAJ, date('Y')));
-    $smarty->assign_by_ref('datStartPreviousMonth', mktime(0, 0, 0, date('m') - 1, 1, date('Y')));
-    $smarty->assign_by_ref(  'datEndPreviousMonth', mktime(0, 0, 0, date('m'), 0, date('Y')));
-    $smarty->assign_by_ref( 'datStartCurrentMonth', mktime(0, 0, 0, date('m'), 1, date('Y')));
-    $smarty->assign_by_ref(   'datEndCurrentMonth', mktime(0, 0, 0, date('m') + 1, 0, date('Y')));
-    $smarty->assign_by_ref( 'datStartPreviousYear', mktime(0, 0, 0, 1, 1, date('Y') - 1));
-    $smarty->assign_by_ref(   'datEndPreviousYear', mktime(0, 0, 0, 12, 31, date('Y') - 1));
-    $smarty->assign_by_ref(  'datStartCurrentYear', mktime(0, 0, 0, 1, 1, date('Y')));
-    $smarty->assign_by_ref(    'datEndCurrentYear', mktime(0, 0, 0, 12, 31, date('Y')));
+    $smarty->assign_by_ref( 'datStartPreviousWeek', mktime(0, 0, 0, $intCurMonth, $intCurDay - $intCurWeek + INT_START_WEEK_DAY_SILLAJ - 7, $intCurYear));
+    $smarty->assign_by_ref(   'datEndPreviousWeek', mktime(23, 59, 59, $intCurMonth, $intCurDay + (6 - $intCurWeek) + INT_START_WEEK_DAY_SILLAJ - 7, $intCurYear));
+    $smarty->assign_by_ref(  'datStartCurrentWeek', mktime(0, 0, 0, $intCurMonth, $intCurDay - $intCurWeek + INT_START_WEEK_DAY_SILLAJ, $intCurYear));
+    $smarty->assign_by_ref(    'datEndCurrentWeek', mktime(23, 59, 59, $intCurMonth, $intCurDay + (6 - $intCurWeek) + INT_START_WEEK_DAY_SILLAJ, $intCurYear));
+    $smarty->assign_by_ref('datStartPreviousMonth', mktime(0, 0, 0, $intCurMonth - 1, 1, $intCurYear));
+    $smarty->assign_by_ref(  'datEndPreviousMonth', mktime(0, 0, 0, $intCurMonth, 0, $intCurYear));
+    $smarty->assign_by_ref( 'datStartCurrentMonth', mktime(0, 0, 0, $intCurMonth, 1, $intCurYear));
+    $smarty->assign_by_ref(   'datEndCurrentMonth', mktime(0, 0, 0, $intCurMonth + 1, 0, $intCurYear));
+    $smarty->assign_by_ref( 'datStartPreviousYear', mktime(0, 0, 0, 1, 1, $intCurYear - 1));
+    $smarty->assign_by_ref(   'datEndPreviousYear', mktime(0, 0, 0, 12, 31, $intCurYear - 1));
+    $smarty->assign_by_ref(  'datStartCurrentYear', mktime(0, 0, 0, 1, 1, $intCurYear));
+    $smarty->assign_by_ref(    'datEndCurrentYear', mktime(0, 0, 0, 12, 31, $intCurYear));
     $smarty->assign(                      'booCal', true); // use js calendar : call the js in the header
     $smarty->assign_by_ref(        'arrMonthNames', $arrMonthNames);
     $smarty->assign_by_ref(            'arrDayIni', $arrDayIni);
-    $smarty->assign_by_ref(     'strDateFormatCal', dateFormatPhpToJsCal(STR_DATE_FORMAT_SILLAJ));
+    $smarty->assign_by_ref(     'strDateFormatCal', dateFormatPhpToJsCal(STR_DATE_FORMAT_SILLAJ)); // convert date format string 
     $smarty->assign_by_ref(           'arrProject', $project->get()); // list of all projects (for gantt form)
     $smarty->assign_by_ref(              'arrTask', $task->get());    // list of all tasks (for gantt form)
  
