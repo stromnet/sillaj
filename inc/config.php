@@ -60,7 +60,7 @@ $arrLanguageNameLookup = array(
 );
 
 // Application internals 
-define(        'BOO_DEBUG_SILLAJ', true);
+define(        'BOO_DEBUG_SILLAJ', false);
 define(      'FN_ROOT_DIR_SILLAJ', dirname($_SERVER['SCRIPT_FILENAME']) .'/');
 define(         'FN_CACHE_SILLAJ', FN_ROOT_DIR_SILLAJ .'cache/');
 // finding public path. It takes care if installed directly in the documentroot whereas in a subdir
@@ -86,7 +86,7 @@ if (BOO_DEBUG_SILLAJ) {
     error_reporting(E_ALL);
 }
 else {
-  error_reporting(0);
+    error_reporting(0);
 }
 
 // Main classes
@@ -157,6 +157,8 @@ if (BOO_TEMPLATE_NOT_FOUND_SILLAJ) { // defined in SmartySillaj::smartySillaj()
 }
 
 // Database connectivity with PEAR::DB
+// the $db variable will be used as a global variable in all functions in 
+// sillaj.class.php
 $db = DB::connect(STR_DB_TYPE_SILLAJ .'://'. STR_DB_USER_SILLAJ .':'. STR_DB_PASS_SILLAJ .'@'. STR_DB_HOST_SILLAJ .'/'. STR_DB_DATABASE_SILLAJ);
 if (DB::isError($db)) {
     raiseError($db->getMessage());
@@ -172,9 +174,10 @@ function raiseError($strErrorMessage) {
 
     $smarty->assign('strContent', '<p class="error">'. $strErrorMessage .'</p>');
     
-    /*if (!$_SESSION['booIsAuthent']) {
+    // display a menu bar only if we're authenticated. eg not when creating an account
+    if (!$_SESSION['booIsAuthent']) {
         $smarty->assign('booDisplayMenu', false);
-    }*/
+    }
     
     // use a default page title if not assigned before
     if (is_null($smarty->get_template_vars('strPageTitle'))) {

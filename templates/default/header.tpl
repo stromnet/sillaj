@@ -23,11 +23,17 @@
 {/section}
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/print.css" media="print" />
 {if basename($smarty.server.SCRIPT_NAME) != 'login.php'}<link rel="alternate" type="application/atom+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}atom.php?strUserId={$smarty.session.strUserId}" title="{#atomFeed#}" />
-<link rel="alternate" type="application/rss+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="{#rssFeed#}" />{/if}{if basename($smarty.server.SCRIPT_NAME) == 'index.php'}
+<link rel="alternate" type="application/rss+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="{#rssFeed#}" />{/if}
+{if basename($smarty.server.SCRIPT_NAME) == 'index.php'}
 <link rel="start" href="?datEvent={$smarty.now|date_format:'%Y-%m-%d'}" title="{#liToday#}" />
 <link rel="prev" href="?datEvent={$datYesterday}" title="{#dayPrev#}" />
 <link rel="next" href="?datEvent={$datTomorrow}" title="{#dayNext#}" />
-{/if}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}lang/{$smarty.session.strLocale}/lang.js"></script>    
+{/if}
+{if basename($smarty.server.SCRIPT_NAME) == 'gantt.php'}
+<link rel="prev" href="{$smarty.server.PHP_SELF}?{$strMain}={$intObjId}&amp;intSpan={$intSpan}&amp;datEndGantt={$datPrev}" title="&lt;" />
+<link rel="next" href="{$smarty.server.PHP_SELF}?{$strMain}={$intObjId}&amp;intSpan={$intSpan}&amp;datEndGantt={$datNext}" title="&gt;" />
+{/if}
+<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}lang/{$smarty.session.strLocale}/lang.js"></script>    
 <script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/sillaj.js"></script>
 {if ! empty($booCal)}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/CalendarPopup.js"></script>
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/calendar.css" media="screen" />{/if}

@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section="project"}
 {include file="header.tpl"}
+<!-- {$smarty.template} -->
 {if ! empty($strMessage)}<p class="info">{$strMessage}</p>{/if}
 <p><a href="project.php?add=1" title="{#aTitleAddProject#}">{#aAddProject#}</a></p>
 {if count($arrProject) == 0}

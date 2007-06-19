@@ -1,4 +1,5 @@
-{* frmProjectTask.tpl ; called by index.tpl and tool.tpl and frmReport.tpl *}
+{* called by index.tpl and tool.tpl and frmReport.tpl *}
+<!-- {$smarty.template} -->
 <label for="intProjectId" accesskey="{#accProject#}">{#labProject#}</label>
 {if ! count($arrProject)}
   <span class="info">{#noProject#} <a href="project.php?add=1" title="{#aProject#}">+</a></span>

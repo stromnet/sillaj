@@ -1,6 +1,7 @@
 {* called by task.php *}
 {config_load file=$fnLanguageTpl section='edit_task'}
 {include file="header.tpl"}
+<!-- {$smarty.template} -->
 {if ! empty($booEdit)}
 <p>
   <a href="event.php?intTaskId={$intTaskId}" title="{#aTitleEventForTask#}">{#aEventForTask#}</a>

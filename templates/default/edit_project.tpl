@@ -1,6 +1,7 @@
 {* called by project.php *}
 {config_load file=$fnLanguageTpl section='edit_project'}
 {include file="header.tpl"}
+<!-- {$smarty.template} -->
 {if ! empty($booEdit)}
 <p>
   <a href="event.php?intProjectId={$intProjectId}" title="{#aTitleEventForProject#}">{#aEventForProject#}</a>

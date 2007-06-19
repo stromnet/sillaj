@@ -1,4 +1,5 @@
 {* called by search.tpl, index.tpl, event.tpl *}
+<!-- {$smarty.template} -->
 <table id="eventsTable" summary="{#sumEvent#}">
   {section name=i loop=$arrEvent}
   <tr{if ! empty($booEdit) && ($arrEvent[i].intEventId == $intEventId)} class="eventEdited"{/if}>    

@@ -1,11 +1,10 @@
 {* called by report.php *}
 {config_load file=$fnLanguageTpl section='report'}
 {include file='header.tpl'}
+<!-- {$smarty.template} -->
 <form action="{$smarty.server.PHP_SELF}" id="frmReport" method="get" onsubmit="return frmReport_onsubmit(this);">    
-  
-  
-  
-  <fieldset id="fldDate">  
+
+   <fieldset id="fldDate">  
     {if $smarty.const.BOO_ALLOW_EVERYONE_REPORT_SILLAJ}
     <fieldset id="fldUser">
       <legend>{#user#}</legend>

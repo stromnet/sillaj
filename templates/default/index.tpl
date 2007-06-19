@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section='index'}
 {include file='header.tpl' strOnload="document.getElementById('timStart').focus();"}
+<!-- {$smarty.template} -->
 <div id="formAndCalendar">
   {if ! empty($strMessage)}<p class="info">{$strMessage}</p>{/if}
   <div id="calendarBox">

@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section='search'}
 {include file='header.tpl'}
+<!-- {$smarty.template} -->
 {if count($arrEvent) > 0}
 <div id="events">
   <h3>{$arrEvent|@count} {if count($arrEvent) > 1}{#results#}{else}{#result#}{/if} '{$strKeyword}'</h3>

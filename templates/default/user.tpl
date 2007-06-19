@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section="user"}
 {include file="header.tpl"}
+<!-- {$smarty.template} -->
 <form action="{$smarty.server.PHP_SELF}" id="frmUser" method="post" onsubmit="return frmUser_onsubmit(this, {if ! empty($booEdit)}true{else}false{/if});" autocomplete="off">
   <fieldset>    
     {if ! empty($booEdit)}

@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section='tool'}
 {include file='header.tpl'}
+<!-- {$smarty.template} -->
 <h3>{#move#}</h3>
 <form action="{$smarty.server.PHP_SELF}" id="frmMove" method="post" onsubmit="return frmMove_onsubmit(this);">
   <fieldset>

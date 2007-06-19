@@ -22,6 +22,7 @@
   </form>
   {/if}
 {/if}
+<!-- {$smarty.template} -->
 <table id="report" summary="Report">
   <tr>
     <th colspan="2">{if $booByProject}{#project#}{else}{#task#}{/if}</th>

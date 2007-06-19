@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section='login'}
 {include file='header.tpl'}
+<!-- {$smarty.template} -->
 <noscript><p class="info">{#javascriptNeeded#}</p></noscript>
 <form action="{$smarty.server.PHP_SELF}" id="frmLogin" method="post" onsubmit="return frmLogin_onsubmit(this);">
   <fieldset>

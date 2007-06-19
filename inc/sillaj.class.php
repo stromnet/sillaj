@@ -2147,8 +2147,9 @@ class Sillaj {
         
         if (is_dir($fnDir)) {
             if ($hdl = opendir($fnDir)) {        
-                while (($file = readdir($hdl)) !== false) {           
-                    if ($file != '.' && $file != '..' && is_dir($fnDir . $file)) {                   
+                while (($file = readdir($hdl)) !== false) {
+                    // skip system dir and files and hidden dir (ex : .svn)                              
+                    if ((substr($file, 0, 1) != '.') && is_dir($fnDir . $file)) {                   
                         $arrDir[] = $file;           
                     }      
                 }

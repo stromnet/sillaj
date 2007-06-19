@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section='user'}
 {include file='header.tpl'}
+<!-- {$smarty.template} -->
 <form action="{$smarty.server.PHP_SELF}" id="frmMail" method="post" onsubmit="return frmMail_onsubmit(this);">
   <fieldset>        
     <legend>{#sendTo#}</legend>

@@ -1,5 +1,6 @@
 {config_load file=$fnLanguageTpl section='event'}
 {include file='header.tpl'}
+<!-- {$smarty.template} -->
 {if count($arrEvent) > 0}
 <div id="events">
   <h3>{if $booProject}{#project#}{else}{#task#}{/if} : {$arrEvent[0].strSub}</h3>
