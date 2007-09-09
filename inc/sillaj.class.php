@@ -84,7 +84,7 @@ class Project {
         if (DB::isError($arrTask)) {
             raiseError($arrTask->getMessage());
         }
-      
+
         return $arrTask;
     }
     

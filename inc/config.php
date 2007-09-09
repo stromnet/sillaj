@@ -26,8 +26,6 @@ $arrGanttSpan = array(1, 2, 3, 6, 12);                    // . Available gantt s
 date_default_timezone_set('Europe/Paris');                // . Time zone (for PHP 5.1+)
                                                           //   see http://php.net/manual/en/timezones.php
 
-
-
 // Site Description
 define(        'STR_SITE_NAME_SILLAJ', 'Sillaj :: Demo');                 // site name
 define( 'STR_META_DESCRIPTION_SILLAJ', 'Time tracking for your projects');// site description (for meta tags)
