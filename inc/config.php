@@ -175,7 +175,7 @@ function raiseError($strErrorMessage) {
     $smarty->assign('strContent', '<p class="error">'. $strErrorMessage .'</p>');
     
     // display a menu bar only if we're authenticated. eg not when creating an account
-    if (!$_SESSION['booIsAuthent']) {
+    if (empty($_SESSION['booIsAuthent'])) {
         $smarty->assign('booDisplayMenu', false);
     }
     

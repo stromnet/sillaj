@@ -33,7 +33,8 @@
 <link rel="prev" href="{$smarty.server.PHP_SELF}?{$strMain}={$intObjId}&amp;intSpan={$intSpan}&amp;datEndGantt={$datPrev}" title="&lt;" />
 <link rel="next" href="{$smarty.server.PHP_SELF}?{$strMain}={$intObjId}&amp;intSpan={$intSpan}&amp;datEndGantt={$datNext}" title="&gt;" />
 {/if}
-<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}lang/{$smarty.session.strLocale}/lang.js"></script>    
+<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}lang/{$smarty.session.strLocale}/lang.js"></script>
+{if ! empty($strNonce)}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/md5.js"></script>{/if}    
 <script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/sillaj.js"></script>
 {if ! empty($booCal)}<script type="text/javascript" src="{$smarty.const.URL_ROOT_DIR_SILLAJ}scripts/CalendarPopup.js"></script>
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/calendar.css" media="screen" />{/if}

@@ -1679,6 +1679,13 @@ class User {
     
     /**
      * Check credentials in the database
+     * We use a a nonce-based authentication and we store password encrypted in the database
+     * 
+     * 1- the server generate a random nonce, sent in the login form
+     * 2- before submitting the form, javascript MD5 the password and
+     *    MD5 it concatened with the nonce and the user login, and reset the 
+     *    password so it's not sent in clear text 
+     * 3- here we check if the user exists and if the encrypted response is correct                              
      */
     function execAuthent($booRedirect = true) {
         global $db;
@@ -1690,9 +1697,13 @@ class User {
             raiseError(STR_NO_LOGIN_SILLAJ);
         }
         
-        if (empty($_POST['strPassword'])) {
+        /*if (empty($_POST['strPassword'])) {
             raiseError(STR_NO_PASSWORD_SILLAJ);
-        }        
+        }*/  
+        
+        if (empty($_POST['strResponse'])) {
+            raiseError(STR_NO_RESPONSE_LOGIN_SILLAJ);
+        }     
         
         if (empty($_POST['urlDest'])) {
             $urlDest = URL_ROOT_DIR_SILLAJ;
@@ -1705,6 +1716,7 @@ class User {
         $arrAuthent = $db->getAll("
           SELECT
             strUserId,
+            strPassword,
             strName,
             strFirstname,
             strEmail,
@@ -1715,7 +1727,7 @@ class User {
           FROM sillaj_user
           WHERE 
             strUserId = '". $_POST['strUserId'] ."'
-            AND strPassword = MD5('". $_POST['strPassword'] ."')");
+            -- AND strPassword = MD5('". $_POST['strPassword'] ."')");
             
         if (DB::isError($arrAuthent)) {
             raiseError($arrAuthent->getMessage());
@@ -1726,6 +1738,10 @@ class User {
         }
         if (count($arrAuthent) > 1) {
             raiseError(STR_UNEXPECTED_AUTHENT_SILLAJ);
+        }
+        
+        if ($_POST['strResponse'] != MD5($arrAuthent[0]['strPassword'] . $_SESSION['strNonce'] . $_POST['strUserId'])) {
+            raiseError(STR_NO_AUTHENT_SILLAJ);
         }
         
         // remember values
@@ -2003,18 +2019,8 @@ class User {
     function resetPassword($strEmail, $booCommitNow = true) {
         global $db;
         
-        // Generate random password
-        $strBase = 'abchefghjkmnpqrstuvwxyz0123456789';
-        srand((double) microtime() * 1000000); 
-        $i = 0;
-        $strNewPassword = '';
-        while ($i <= 7) {
-            $intPos = rand() % 33;
-            $tmp = substr($strBase, $intPos, 1);
-            $strNewPassword = $strNewPassword . $tmp;
-            $i++;
-        }
-        
+        $strNewPassword = Sillaj::getRandom();
+
         $strEmail = trim($strEmail);
         
         // Update accounts (note : several accounts can have the same email address)
@@ -2178,6 +2184,23 @@ class Sillaj {
             }            
         }
         return $arrFile ;
+    }
+    
+    /**
+     * Generate a random 7 character string used for new password and authent (nonce)
+     */         
+    function getRandom() {        
+        $strBase = 'abchefghjkmnpqrstuvwxyz0123456789';
+        srand((double) microtime() * 1000000); 
+        $i = 0;
+        $strRandom = '';
+        while ($i <= 7) {
+            $intPos = rand() % 33;
+            $tmp = substr($strBase, $intPos, 1);
+            $strRandom = $strRandom . $tmp;
+            $i++;
+        }        
+        return $strRandom;    
     }
     
 } // end class Sillaj

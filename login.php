@@ -11,13 +11,15 @@ if (count($_POST) != 0) {
 }
 
 // else display form
-$smarty->caching = true;
+$_SESSION['strNonce'] = $sillaj->getRandom();
+
 if (!empty($_GET['urlDest'])) {
     $smarty->assign('urlDest', $_GET['urlDest']);
 }
-if(!$smarty->is_cached('login.tpl', $_GET['urlDest'])) {               
-    $smarty->assign('booDisplayMenu', false);
-    $smarty->assign(  'strPageTitle', STR_LOGIN_PAGE_TITLE_SILLAJ);
-}
-$smarty->display('login.tpl', $_GET['urlDest']);
+
+$smarty->assign_by_ref('strNonce', $_SESSION['strNonce']);               
+$smarty->assign( 'booDisplayMenu', false);
+$smarty->assign(   'strPageTitle', STR_LOGIN_PAGE_TITLE_SILLAJ);    
+
+$smarty->display('login.tpl'); // , $_GET['urlDest']
 ?>

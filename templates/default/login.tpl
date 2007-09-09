@@ -8,6 +8,8 @@
     <label for="strUserId">{#labLogin#}</label><input type="text" id="strUserId" name="strUserId" accesskey="{#accLogin#}" /><br />
     <label for="strPassword">{#labPassword#}</label><input type="password" id="strPassword" name="strPassword" accesskey="{#accPassword#}" /><br />
     <input type="hidden" name="urlDest" value="{$urlDest|default:""}" />
+    <input type="hidden" name="strNonce" value="{$strNonce}" />
+    <input type="hidden" name="strResponse" value="" />
     <button type="submit" accesskey="{#accSubmit#}">{#inpSubmit#}</button>
     <button type="reset" accesskey="{#accReset#}">{#inpReset#}</button>
   </fieldset>

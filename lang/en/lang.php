@@ -38,6 +38,7 @@ define(      'STR_EVENTS_SILLAJ', 'events');
 define(  'STR_LOGIN_PAGE_TITLE_SILLAJ', 'Login');
 define(          'STR_NO_LOGIN_SILLAJ', 'Login missing');
 define(       'STR_NO_PASSWORD_SILLAJ', 'Password missing');
+define( 'STR_NO_RESPONSE_LOGIN_SILLAJ', 'No encrypted password found in your request ; you probably must enable javascript');
 
 // class Project
 define(         'STR_PROJECT_CREATED_SILLAJ', 'Project created');

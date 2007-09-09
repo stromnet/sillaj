@@ -225,6 +225,9 @@ function frmLogin_onsubmit(f) {
         alert(noPassword);
         return false;
     } 
+    
+    f.strResponse.value = MD5(MD5(p) + f.strNonce.value + u);
+    f.strPassword.value = '';
 }
 
 // User
