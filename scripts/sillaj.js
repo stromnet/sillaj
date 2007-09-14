@@ -73,17 +73,19 @@ function frmEvent_onsubmit(f) {
     }   
     
     // if a start time input is h:mm and end time is hh:mm, it will trigger an 
-    // error (because of string comparaison)
+    // error (because of string comparison)
     // so we add a 0 before single digit hours
     var splitStr = /[-:,; ]/g;
     var stmp = s.split(splitStr);
     if (stmp[0].length == 1) {
         s = '0' + s;
+        //f.timStart.value = s;
     }
 
     var stmp = e.split(splitStr);
     if (stmp[0].length == 1) {
         e = '0' + e;
+        //f.timEnd.value = e;
     }
 
     // check if start time is before end time
@@ -91,6 +93,7 @@ function frmEvent_onsubmit(f) {
     if ((d == '') && (e < s) && (e.indexOf('+d') == -1)) {
         f.timStart.focus();
         alert(e +' < '+ s +' : '+ badTimeInterval);
+        f.timEnd.focus();
         return false;
     }
 }
@@ -224,8 +227,9 @@ function frmLogin_onsubmit(f) {
         f.strPassword.focus();
         alert(noPassword);
         return false;
-    } 
+    }
     
+    // Avoid to send the pasword in clear text : encrypt with MD5 and clear the password field
     f.strResponse.value = MD5(MD5(p) + f.strNonce.value + u);
     f.strPassword.value = '';
 }
@@ -254,7 +258,7 @@ function frmUser_onsubmit(f, booEdit) {
         return false;
     }  
     
-    // http://regexlib.com/RETester.aspx?regexp_id=608
+    // Check email (from http://regexlib.com/RETester.aspx?regexp_id=608)
     var strPattern = /^((?:(?:(?:[a-zA-Z0-9][\.\-\+_]?)*)[a-zA-Z0-9])+)\@((?:(?:(?:[a-zA-Z0-9][\.\-_]?){0,62})[a-zA-Z0-9])+)\.([a-zA-Z0-9]{2,6})$/
     if (strPattern.exec(m) == null) {
         f.strEmail.focus();

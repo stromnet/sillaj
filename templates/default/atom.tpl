@@ -9,7 +9,6 @@
     <link rel="self" type="application/atom+xml" href="http://{$smarty.server.SERVER_NAME}{$smarty.server.SCRIPT_NAME}" />
     <rights>{$smarty.const.STR_ADMIN_EMAIL_SILLAJ}</rights>
     <generator version="{$smarty.const.STR_APPLI_VERSION_SILLAJ}">{$smarty.const.STR_APPLI_NAME_SILLAJ}</generator>
-    
     <icon>http://{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_DIR_SILLAJ}favicon.ico</icon>
     <logo>http://{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_DIR_SILLAJ}templates/default/img/logo_sillaj.png</logo>
     {section name=i loop=$arrAtom}

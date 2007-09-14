@@ -1274,6 +1274,16 @@ class Event {
             raiseError(STR_NO_TIME_INPUT_SILLAJ);
         }
         
+        // Add leading 0 for the next comparison
+        list($h, $m) = split('[-:,; ]', $s);
+        $o = strlen($h) == 1 ? '0' : '';
+        $s = $o . $s;
+        
+        list($h, $m) = split('[-:,; ]', $e);
+        $o = strlen($h) == 1 ? '0' : '';
+        $e = $o . $e;
+        
+        // Check if start is before end
         if (empty($d) && ($s > $e)) {
             raiseError(STR_BAD_TIME_INPUT_SILLAJ . htmlspecialchars(" $s > $e"));
         }
