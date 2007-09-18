@@ -54,6 +54,7 @@ $arrLanguageNameLookup = array(
     'de' => 'Deutsch',    
     'en' => 'English',
     'fr' => 'Français',
+    'nl' => 'Dutch',
     'sv' => 'Svensk'
 );
 
