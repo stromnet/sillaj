@@ -1,6 +1,6 @@
 <?php
 // Deutsche Uebersetzung 2007-01-23 18:18 
-// Thanks to lmoehri@gwdg.de
+// Thanks to lmoehri @ gwdg.de
 
 define('STR_PHP_LOCALE_WIN_SILLAJ', 'deu');
 define('STR_PHP_LOCALE_NIX_SILLAJ', 'de_DE');

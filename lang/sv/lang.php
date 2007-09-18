@@ -1,6 +1,6 @@
 <?php
 // Swedish translation 2006-01-17 18:18 
-// Thanks to janson.peter@gmail.com
+// Thanks to janson.peter @ gmail.com
 
 define('STR_PHP_LOCALE_WIN_SILLAJ', 'sve');
 define('STR_PHP_LOCALE_NIX_SILLAJ', 'sv_SE');

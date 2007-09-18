@@ -1,5 +1,7 @@
 <?php
-// Dutch translation 2007-09-08 21:00 
+// Dutch translation 2007-09-08 21:00
+// Thanks to bert.fransen @ sygma.nl
+
 define('STR_PHP_LOCALE_WIN_SILLAJ', 'nl');
 define('STR_PHP_LOCALE_NIX_SILLAJ', 'nl_NL');
 
