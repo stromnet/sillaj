@@ -93,8 +93,8 @@ require(FN_ROOT_DIR_SILLAJ .'lib/smarty/Smarty.class.php');
 require(FN_ROOT_DIR_SILLAJ .'lib/pear/DB.php');
 require('sillaj.class.php');
 
-// Start Session and populate the $_SESSION variable with information on the
-// user (name, lang, template...)
+// Start the session and will populate the $_SESSION variable with information on the
+// user (name, lang, template...) when login
 $user = new User;
 
 // Set default theme
@@ -113,7 +113,7 @@ $smarty = new smartySillaj($_SESSION['strThemeName']);
 // Application parameters (find available templates, languages and themes)
 $sillaj = new Sillaj;
  
-// Load PHP messages translations (application logic messages) from /lang/xx/lang.php
+// Load PHP messages translations (application logic messages) from /lang/??/lang.php
 $fnLanguageMsg = FN_ROOT_DIR_SILLAJ .'lang/'. $_SESSION['strLocale'] .'/lang.php';
 if (file_exists($fnLanguageMsg)) {
     require($fnLanguageMsg);
@@ -129,7 +129,7 @@ else {
 define('STR_PHP_LOCALE_SILLAJ', BOO_OS_WIN_SILLAJ ? STR_PHP_LOCALE_WIN_SILLAJ : STR_PHP_LOCALE_NIX_SILLAJ);
 setlocale(LC_ALL, STR_PHP_LOCALE_SILLAJ);
 
-// check templates translations (for HTML display) in /lang/xx/lang.txt
+// check templates translations (for HTML display) in /lang/??/lang.txt
 $fnLanguageTpl = $smarty->config_dir . $_SESSION['strLocale'] .'/lang.txt';
 if (!file_exists($fnLanguageTpl)) {
     $strLocaleNotSupported = $_SESSION['strLocale'];
@@ -137,7 +137,7 @@ if (!file_exists($fnLanguageTpl)) {
     die ('Error: Language "'. $strLocaleNotSupported .'" not supported ; missing '. $fnLanguageTpl);
 }
 
-// Automagically assign page title from the menu array in /lang/xx/php.php ; could be overwritten later
+// Automagically assign page title from the menu array in /lang/??/php.php ; could be overwritten later
 if (key_exists(basename($_SERVER['PHP_SELF']), $arrMenu)) { 
     $smarty->assign('strPageTitle', $arrMenu[basename($_SERVER['PHP_SELF'])]['strMenu']);
 }
@@ -233,7 +233,7 @@ function localDateToIso($datLocal) {
         case '%Y-%m-%d': 
             return $datLocal;
         default:
-            raiseError(STR_BAD_DATE_FORMAT_SILLAJ);   
+            raiseError(STR_BAD_DATE_FORMAT_SILLAJ .' : '. STR_DATE_FORMAT_SILLAJ);   
     } 
 }
 
@@ -253,7 +253,7 @@ function dateFormatPhpToJsCal($strDateFormat) {
         case '%Y-%m-%d': 
             return 'yyyy-MM-dd';
         default:
-            raiseError(STR_BAD_DATE_FORMAT_SILLAJ);   
+            raiseError(STR_BAD_DATE_FORMAT_SILLAJ .' : '. $strDateFormat);   
     } 
 }
 

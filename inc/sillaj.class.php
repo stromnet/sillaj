@@ -1676,10 +1676,10 @@ class User {
 
     /**
      * Call this function at the beginning of each page to protect
-     * if not authenticated -> redirect to the login page
+     * if not authenticated -> will be redirected to the login page
      */
-    function checkAuthent() {    //print_r($_SESSION); echo "\n--------\n";
-        if (empty($_SESSION['booIsAuthent'])) {      //print_r($_SESSION);  exit;
+    function checkAuthent() {
+        if (empty($_SESSION['booIsAuthent'])) {
             $urlDest = $_SERVER['REQUEST_URI'];
             header('Location: '. URL_ROOT_DIR_SILLAJ .'login.php?urlDest='. urlencode($urlDest));
             exit();
@@ -1691,67 +1691,64 @@ class User {
      * Check credentials in the database
      * We use a a nonce-based authentication and we store password encrypted in the database
      * 
-     * 1- the server generate a random nonce, sent in the login form
-     * 2- before submitting the form, javascript MD5 the password and
-     *    MD5 it concatened with the nonce and the user login, and reset the 
+     * 1- the server generates a random nonce, sent with the login form
+     * 2- before submitting the form, javascript will MD5 the password and
+     *    will MD5 it, concatened with the nonce and the user login, and reset the 
      *    password so it's not sent in clear text 
      * 3- here we check if the user exists and if the encrypted response is correct                              
      */
     function execAuthent($booRedirect = true) {
         global $db;
         global $smarty;
-        $smarty->assign('booDisplayMenu', false);
+        global $sillaj;
         
-        // Check data from the form       
+        $smarty->assign('booDisplayMenu', false); // if we show an error message we don't want to display the menu
+        
+        // Check data from the form    
+        $urlDest = empty($_POST['urlDest']) ? URL_ROOT_DIR_SILLAJ : $_POST['urlDest'];     
+        
         if (empty($_POST['strUserId'])) {
             raiseError(STR_NO_LOGIN_SILLAJ);
         }
         
-        /*if (empty($_POST['strPassword'])) {
+        if (empty($_POST['strPassword']) && empty($_POST['strResponse'])) {
             raiseError(STR_NO_PASSWORD_SILLAJ);
-        }*/  
+        }
         
-        if (empty($_POST['strResponse'])) {
-            raiseError(STR_NO_RESPONSE_LOGIN_SILLAJ);
-        }     
-        
-        if (empty($_POST['urlDest'])) {
-            $urlDest = URL_ROOT_DIR_SILLAJ;
+        // Check if 1 valid couple login/password 
+        // If javascript is disabled we won't get the response but just the 
+        // password in clear text. We can manage these two types of authentication              
+        if (!empty($_POST['strResponse'])) {             
+            $strWhere = "('". $_POST['strResponse'] ."' = MD5(CONCAT(strPassword,'". $_SESSION['strNonce'] ."','". $_POST['strUserId'] ."')))";
         }
         else {
-            $urlDest = $_POST['urlDest'];
+            $strWhere = "strPassword = MD5('". $_POST['strPassword'] ."')";            
         }
-                    
-        // check if 1 valid couple login/password      
+        
         $arrAuthent = $db->getAll("
-          SELECT
-            strUserId,
-            strPassword,
-            strName,
-            strFirstname,
-            strEmail,
-            booAllowOther,
-            booUseShare,
-            strLanguage,
-            strTemplate
-          FROM sillaj_user
-          WHERE 
-            strUserId = '". $_POST['strUserId'] ."'
-            -- AND strPassword = MD5('". $_POST['strPassword'] ."')");
-            
+            SELECT
+              strUserId,
+              strName,
+              strFirstname,
+              strEmail,
+              booAllowOther,
+              booUseShare,
+              strLanguage,
+              strTemplate
+            FROM sillaj_user
+            WHERE 
+              strUserId = '". $_POST['strUserId'] ."'
+              AND $strWhere
+            ");
+        
         if (DB::isError($arrAuthent)) {
             raiseError($arrAuthent->getMessage());
         }
-        
         if (count($arrAuthent) == 0) {
             raiseError(STR_NO_AUTHENT_SILLAJ);
         }
         if (count($arrAuthent) > 1) {
             raiseError(STR_UNEXPECTED_AUTHENT_SILLAJ);
-        }
-        
-        if ($_POST['strResponse'] != MD5($arrAuthent[0]['strPassword'] . $_SESSION['strNonce'] . $_POST['strUserId'])) {
-            raiseError(STR_NO_AUTHENT_SILLAJ);
         }
         
         // remember values
@@ -1761,9 +1758,7 @@ class User {
         $_SESSION[     'strEmail'] = $arrAuthent[0]['strEmail'];
         $_SESSION['booAllowOther'] = $arrAuthent[0]['booAllowOther'];
         $_SESSION[  'booUseShare'] = $arrAuthent[0]['booUseShare'];
-        $_SESSION[ 'booIsAuthent'] = true; 
-        
-        $sillaj = new Sillaj;
+        $_SESSION[ 'booIsAuthent'] = true;                 
         
         // set the preferred language if it exists, else we keep the default one
         if (in_array($arrAuthent[0]['strLanguage'], $sillaj->getLanguage())) {

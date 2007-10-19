@@ -232,6 +232,7 @@ function frmLogin_onsubmit(f) {
     // Avoid to send the pasword in clear text : encrypt with MD5 and clear the password field
     f.strResponse.value = MD5(MD5(p) + f.strNonce.value + u);
     f.strPassword.value = '';
+    f.strNonce.value = '';
 }
 
 // User
@@ -258,7 +259,7 @@ function frmUser_onsubmit(f, booEdit) {
         return false;
     }  
     
-    // Check email (from http://regexlib.com/RETester.aspx?regexp_id=608)
+    // Check email (pattern from http://regexlib.com/RETester.aspx?regexp_id=608)
     var strPattern = /^((?:(?:(?:[a-zA-Z0-9][\.\-\+_]?)*)[a-zA-Z0-9])+)\@((?:(?:(?:[a-zA-Z0-9][\.\-_]?){0,62})[a-zA-Z0-9])+)\.([a-zA-Z0-9]{2,6})$/
     if (strPattern.exec(m) == null) {
         f.strEmail.focus();
@@ -318,12 +319,8 @@ function report_toggleDetail(obj) {
      
     for(i=0;i<=detail.length-1;i++) {
         if (obj.checked) {
-            if (navigator.appVersion.indexOf('MSIE') != -1) { // bad kludge for identifying IE
-                detail[i].style.display = 'inline';
-            }
-            else {
-                detail[i].style.display = 'table-row';
-            }             
+            // bad kludge for identifying IE
+            detail[i].style.display = (navigator.appVersion.indexOf('MSIE') != -1) ? 'inline' : 'table-row';
         }
         else { 
             detail[i].style.display = 'none';
