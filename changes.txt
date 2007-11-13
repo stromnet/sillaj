@@ -1,3 +1,9 @@
+0.2.16 - 2007-09-18 rev. 23
+===========================
+- code cleaning
+- fixed bug [ 1831290 ] problem when creating a new user
+- enhance login
+
 0.2.15 - 2007-09-18 rev. 20
 ===========================
 - Added dutch (nl) language (bert.fransen @ sygma.nl)
