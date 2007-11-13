@@ -1711,7 +1711,7 @@ class User {
             raiseError(STR_NO_LOGIN_SILLAJ);
         }
         
-        if (empty($_POST['strPassword']) && empty($_POST['strResponse'])) {
+        if (empty($_POST['strPassword']) && (empty($_POST['strResponse']) && empty($_POST['booEdit']))) {
             raiseError(STR_NO_PASSWORD_SILLAJ);
         }
         

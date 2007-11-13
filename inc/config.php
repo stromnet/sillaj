@@ -2,8 +2,9 @@
 
 // Your application parameters                                                        Allowed              Default
 //                                                                                    =======              =======
-define(               'STR_LOCALE_SILLAJ', 'en');         // . default language       'fr', 'sv' 'de' 'en' 'en'
-                                                          //   see ISO 639-1          see /lang/ folder                                                          
+define(               'STR_LOCALE_SILLAJ', 'en');         // . default language       'fr', 'sv', 'de',   'en'
+                                                          //   see ISO 639-1          'en', 'nl'
+                                                          //                          see /lang/ folder                                                          
 define(             'STR_TEMPLATE_SILLAJ', 'default');    // . default theme          dir from /templates  'default'
 define(       'INT_START_WEEK_DAY_SILLAJ', 1);            // . week starts on :       0 sunday,            1
                                                           //                          1 monday,...                                                          
@@ -20,7 +21,7 @@ define(         'BOO_ENABLE_GRAPH_SILLAJ', true);         // . build graph ?    
                                                           //   enabled in php.ini)                                                          
 define(                  'STR_SEP_SILLAJ', ' &gt; ');     // . Separator in page      string               ' &gt; '    
                                                           //   titles                                                          
-define(            'INT_GANTT_SPAN_SILLAJ', 3);           // . default gantt span     months               3
+define(            'INT_GANTT_SPAN_SILLAJ', 3);           // . default gantt span     months (int)         3
 $arrGanttSpan = array(1, 2, 3, 6, 12);                    // . Available gantt span   array of number      array(1, 2, 3, 6, 12)
                                                           //                          of months (int)   
 date_default_timezone_set('Europe/Paris');                // . Time zone (for PHP 5.1+)
