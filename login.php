@@ -21,5 +21,5 @@ $smarty->assign_by_ref('strNonce', $_SESSION['strNonce']);
 $smarty->assign( 'booDisplayMenu', false);
 $smarty->assign(   'strPageTitle', STR_LOGIN_PAGE_TITLE_SILLAJ);    
 
-$smarty->display('login.tpl'); // , $_GET['urlDest']
+$smarty->display('login.tpl');
 ?>

@@ -14,6 +14,7 @@
 <meta name="DC.Creator" content="{$smarty.const.STR_AUTHOR_SILLAJ} - {$smarty.const.STR_AUTHOR_EMAIL_SILLAJ}" />
 <meta name="DC.Date.created" content="2005-02-02" scheme="W3CDTF" />
 <meta name="DC.Date.issued" content="{$smarty.now|date_format_w3cdtf}" scheme="W3CDTF" />
+<meta name="DC.Title" content="{$smarty.const.STR_SITE_NAME_SILLAJ}{$smarty.const.STR_SEP_SILLAJ}{$strPageTitle}" />
 <title>{$smarty.const.STR_SITE_NAME_SILLAJ}{$smarty.const.STR_SEP_SILLAJ}{$strPageTitle}</title>
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
 <link rel="shortcut icon" type="image/x-icon" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}favicon.ico" />
@@ -24,6 +25,7 @@
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/print.css" media="print" />
 {if basename($smarty.server.SCRIPT_NAME) != 'login.php'}<link rel="alternate" type="application/atom+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}atom.php?strUserId={$smarty.session.strUserId}" title="{#atomFeed#}" />
 <link rel="alternate" type="application/rss+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="{#rssFeed#}" />{/if}
+<link rel="search" type="application/opensearchdescription+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}opensearch.php" title="{$smarty.const.STR_SITE_NAME_SILLAJ}" />
 {if basename($smarty.server.SCRIPT_NAME) == 'index.php'}
 <link rel="start" href="?datEvent={$smarty.now|date_format:'%Y-%m-%d'}" title="{#liToday#}" />
 <link rel="prev" href="?datEvent={$datYesterday}" title="{#dayPrev#}" />
