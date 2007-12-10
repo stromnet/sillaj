@@ -24,7 +24,8 @@
 {/section}
 <link rel="stylesheet" type="text/css" href="{$urlThemeDir}styles/print.css" media="print" />
 {if basename($smarty.server.SCRIPT_NAME) != 'login.php'}<link rel="alternate" type="application/atom+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}atom.php?strUserId={$smarty.session.strUserId}" title="{#atomFeed#}" />
-<link rel="alternate" type="application/rss+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="{#rssFeed#}" />{/if}
+<link rel="alternate" type="application/rss+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}rss.php?strUserId={$smarty.session.strUserId}" title="{#rssFeed#}" />
+{/if}
 <link rel="search" type="application/opensearchdescription+xml" href="{$smarty.const.URL_ROOT_DIR_SILLAJ}opensearch.php" title="{$smarty.const.STR_SITE_NAME_SILLAJ}" />
 {if basename($smarty.server.SCRIPT_NAME) == 'index.php'}
 <link rel="start" href="?datEvent={$smarty.now|date_format:'%Y-%m-%d'}" title="{#liToday#}" />
