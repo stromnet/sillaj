@@ -6,9 +6,10 @@ define(               'STR_LOCALE_SILLAJ', 'en');         // . default language 
                                                           //   see ISO 639-1          'en', 'nl'
                                                           //                          see /lang/ folder                                                          
 define(             'STR_TEMPLATE_SILLAJ', 'default');    // . default theme          dir from /templates  'default'
-define(       'INT_START_WEEK_DAY_SILLAJ', 1);            // . week starts on :       0 sunday,            1
+define(       'INT_START_WEEK_DAY_SILLAJ', 0);            // . week starts on :       0 sunday,            0
                                                           //                          1 monday,...                                                          
-define(         'INT_RSS_MAX_ITEM_SILLAJ', 20);           // . max items in RSS feed  integer              20
+define(         'INT_RSS_MAX_ITEM_SILLAJ', 20);           // . max items in           integer              20
+                                                          //   RSS/Atom feed
 define('BOO_ALLOW_EVERYONE_REPORT_SILLAJ', false);        // . allow to see other     true/false           false
                                                           //   people's reports ?                                                                                                                   
 define(          'STR_DATE_FORMAT_SILLAJ', '%Y-%m-%d');   // . default short date     '%d/%m/%Y' or        '%Y-%m-%d'
@@ -67,7 +68,7 @@ define(         'FN_CACHE_SILLAJ', FN_ROOT_DIR_SILLAJ .'cache/');
 define(     'URL_ROOT_DIR_SILLAJ', dirname($_SERVER['PHP_SELF']) == '/' ? '/' : dirname($_SERVER['PHP_SELF']) .'/');
 define(        'URL_CACHE_SILLAJ', URL_ROOT_DIR_SILLAJ .'cache/');
 define(   'STR_APPLI_NAME_SILLAJ', 'Sillaj');
-define('STR_APPLI_VERSION_SILLAJ', '0.2.14');
+define('STR_APPLI_VERSION_SILLAJ', '0.2.17');
 define(       'STR_AUTHOR_SILLAJ', 'Michaël Delorme');
 define( 'STR_AUTHOR_EMAIL_SILLAJ', 'sillaj@gmail.com');
 define(       'BOO_OS_WIN_SILLAJ', strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');  // find OS so we can chose which locale format to use

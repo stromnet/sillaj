@@ -142,11 +142,11 @@ function smarty_function_calendar($params, &$smarty) {
     
     // Calendar header
     $strCalendar = '<h3><a href="?datEvent='. date('Y-m-d', mktime(0, 0, 0, $month, $day - 1, $year))
-      .'" title="'. STR_PREV_DAY_SILLAJ .' : '. strftime(STR_LONG_DATE_FORMAT_SILLAJ, mktime(0, 0, 0, $month, $day - 1, $year)) .'">&lt;</a> '. strftime(STR_LONG_DATE_FORMAT_SILLAJ, mktime(0, 0, 0, $month, $day, $year)) 
-      .' <a href="?datEvent='. date('Y-m-d', mktime(0, 0, 0, $month, $day + 1, $year))
+      .'" title="'. STR_PREV_DAY_SILLAJ .' : '. strftime(STR_LONG_DATE_FORMAT_SILLAJ, mktime(0, 0, 0, $month, $day - 1, $year)) .'">&lt;</a>&nbsp;'. strftime(STR_LONG_DATE_FORMAT_SILLAJ, mktime(0, 0, 0, $month, $day, $year)) 
+      .'&nbsp;<a href="?datEvent='. date('Y-m-d', mktime(0, 0, 0, $month, $day + 1, $year))
       .'" title="'. STR_NEXT_DAY_SILLAJ .' : '. strftime(STR_LONG_DATE_FORMAT_SILLAJ, mktime(0, 0, 0, $month, $day + 1, $year)) .'">&gt;</a></h3><table id="calendarTable" summary="'. STR_CALENDAR_SILLAJ
-      ."\">\n  <caption>$strPrevMonth " . strftime('%b', mktime(0, 0, 0, $month, 1, $year)) 
-      ." $year $strNextMonth</caption>\n";
+      ."\">\n  <caption>$strPrevMonth&nbsp;" . strftime('%b', mktime(0, 0, 0, $month, 1, $year)) 
+      ." $year&nbsp;$strNextMonth</caption>\n";
     
     // days header row
     $i = 0;    

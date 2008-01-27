@@ -30,9 +30,10 @@ if (count($_GET) == 0) {
     }
 
     // prepare the list of weekday first letters (for js calendar) in local language
+    // arbitrary using first week of 2008 to get day names
     $arrDayIni = array();
     for($i=0;$i<=6;$i++) { 
-        $arrDayIni[] = strtoupper(substr(strftime('%A', mktime(0, 0, 0, 2, $i - 1 + INT_START_WEEK_DAY_SILLAJ, $intCurYear)), 0, 1));
+        $arrDayIni[] = strtoupper(substr(strftime('%A', mktime(0, 0, 0, 1, 6 + $i, 2008)), 0, 1));
     }
     
     // Prepare dates to populate date field according to the buttons click

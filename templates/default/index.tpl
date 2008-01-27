@@ -8,7 +8,7 @@
   </div>
   <ul id="calendarKey">
     <li class="daySelected">{#liDaySelected#}</li>
-    <li><a href="?datEvent={$smarty.now|date_format:'%Y-%m-%d'}"><span class="today">{#liToday#}</span></a></li>    
+    <li><a href="?datEvent={$smarty.now|date_format:'%Y-%m-%d'}" title="{#liToday#}"><span class="today">{#liToday#}</span></a></li>    
     <li class="dayEvent">{#liDayEvent#}</li>
   </ul>
   <form action="{$smarty.server.PHP_SELF}" id="frmEvent" method="post" onsubmit="return frmEvent_onsubmit(this);">
