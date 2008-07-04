@@ -12,12 +12,12 @@ $project = new Project;
 $task = new Task;
 
 // No $_POST or $_GET data -> display the list of projects
-if ((count($_POST) == 0) && (count($_GET) == 0)) {
+if (!count($_POST) && !count($_GET)) {
     $smarty->assign_by_ref('arrProject', $project->get());
     $smarty->display('project.tpl');
 }
 // else $_GET data -> edit or add a project
-elseif (count($_GET) != 0) {
+elseif (count($_GET)) {
         
     // if no "add" in URL -> prefill the form
     if (empty($_GET['add'])) {
@@ -40,7 +40,7 @@ elseif (count($_GET) != 0) {
     $smarty->display('edit_project.tpl');
 }
 // else $_POST data -> validate the form
-elseif (count($_POST) != 0) {   
+elseif (count($_POST)) {   
     
     // todo : allow to migrate events from one task to another (or delete) if a project 
     // doesn't link to the task anymore

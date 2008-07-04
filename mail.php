@@ -8,7 +8,7 @@ require('./inc/config.php');
 $smarty->assign('booDisplayMenu', false);
     
 // No $_POST data -> display the blank form
-if (count($_POST) == 0) {
+if (!count($_POST)) {
     $smarty->caching = true;
     if(!$smarty->is_cached('mail.tpl')) {
         $smarty->assign('strPageTitle', STR_MAIL_PAGE_TITLE_SILLAJ);

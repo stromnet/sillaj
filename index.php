@@ -20,7 +20,7 @@ $booNeedFullTaskList = true;
 
 // manage an event if we are validating a form (we have post values)
 // or we come from index.php?intEventId=xxx (from the RSS feed for example)
-if ((count($_POST) != 0) || !empty($_GET['intEventId'])) {
+if (count($_POST) || !empty($_GET['intEventId'])) {
 	
 	// submitted via an edit button (from index.php or project.php or task.php)
     if (!empty($_POST['inpEdit']) || !empty($_GET['intEventId'])) {

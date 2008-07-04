@@ -6,7 +6,7 @@
 require('./inc/config.php');
 
 // No $_POST data or not logged -> display the blank form
-if ((count($_POST) == 0) && (empty($_SESSION['strUserId']))) {
+if (!count($_POST) && (empty($_SESSION['strUserId']))) {
     
     $smarty->assign(    'booDisplayMenu', false);                       // no need to display the menu (we're not logged)
     $smarty->assign_by_ref('arrTemplate', $sillaj->getTemplate());      // get default template
@@ -16,7 +16,7 @@ if ((count($_POST) == 0) && (empty($_SESSION['strUserId']))) {
 }
 
 // else $_GET data -> edit the account -> pre-fill the form
-elseif ((count($_POST) == 0) && (!empty($_SESSION['strUserId']))) {
+elseif (!count($_POST) && (!empty($_SESSION['strUserId']))) {
     // Allowed to edit ?
     $user->checkAuthent();
         
@@ -38,7 +38,7 @@ elseif ((count($_POST) == 0) && (!empty($_SESSION['strUserId']))) {
 }
 
 // else $_POST data -> validate the form
-elseif (count($_POST) != 0) {    
+elseif (count($_POST)) {    
     if (empty($_POST['booEdit'])) { // we're creating a new user   
         $smarty->assign('strMessage', $user->add());        
         $user->execAuthent(false); // Authentication without redirect

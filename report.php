@@ -9,7 +9,7 @@ require('./inc/config.php');
 $user->checkAuthent();
 
 // No $_GET data -> display the form
-if (count($_GET) == 0) {
+if (!count($_GET)) {
     $project = new Project;
     $task = new Task;    
     

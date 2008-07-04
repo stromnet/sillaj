@@ -12,12 +12,12 @@ $task = new Task;
 $project = new Project;
 
 // No $_POST or $_GET data -> display the list of tasks
-if ((count($_POST) == 0) && (count($_GET) == 0)) {
+if (!count($_POST) && !count($_GET)) {
     $smarty->assign_by_ref('arrTask', $task->get());
     $smarty->display('task.tpl');
 }
 // else $_GET data -> edit or add a task
-elseif (count($_GET) != 0) {
+elseif (count($_GET)) {
         
     // if no "add" in URL -> prefill the form
     if (empty($_GET['add'])) {
@@ -40,7 +40,7 @@ elseif (count($_GET) != 0) {
     $smarty->display('edit_task.tpl');
 }
 // else $_POST data -> validate the form
-elseif (count($_POST) != 0) {   
+elseif (count($_POST)) {   
     if (!empty($_POST['booDelete'])) {  
         $smarty->assign_by_ref('strMessage', $task->del());
     }

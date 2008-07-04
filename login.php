@@ -6,7 +6,7 @@
 require('./inc/config.php');
 
 // Validate form
-if (count($_POST) != 0) {
+if (count($_POST)) {
     $user->execAuthent();
 }
 
