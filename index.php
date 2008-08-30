@@ -55,7 +55,7 @@ if (count($_POST) || !empty($_GET['intEventId'])) {
     }
 }
 
-// If no date is given, default to the session-stored day or if not available to today
+// If no date is given, default to the session-stored day or, if not available, to today
 if (!empty($_REQUEST['datEvent'])) {
     $_SESSION['datEvent'] = $_REQUEST['datEvent'];
 } 

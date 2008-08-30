@@ -18,7 +18,7 @@ $arrMenu = array(
                 'task.php' => array('strMenu' => 'Activités',    'strTip' => 'Édition des activités', 'booDisplay' => true),
               'report.php' => array('strMenu' => 'Rapports',     'strTip' => 'Rapports hebdomadaires, mensuels...', 'booDisplay' => true),    
                 'user.php' => array('strMenu' => 'Utilisateur',  'strTip' => 'Gestion du compte', 'booDisplay' => true),                
-              'logout.php' => array('strMenu' => 'Quitter',       'strTip' => 'Se déconnecter', 'booDisplay' => true),
+              'logout.php' => array('strMenu' => 'Quitter',      'strTip' => 'Se déconnecter', 'booDisplay' => true),
                'event.php' => array('strMenu' => 'Événements',   'strTip' => '', 'booDisplay' => false), // menu virtuel mais utilisé pour mettre automatiquement le titre de la page
               'search.php' => array('strMenu' => 'Chercher',     'strTip' => '', 'booDisplay' => false),  // menu virtuel "
                'gantt.php' => array('strMenu' => 'Gantt',        'strTip' => '', 'booDisplay' => false),  // menu virtuel "
@@ -40,7 +40,6 @@ define(      'STR_EVENTS_SILLAJ', 'événements');
 define(  'STR_LOGIN_PAGE_TITLE_SILLAJ', 'Login');
 define(          'STR_NO_LOGIN_SILLAJ', 'Login absent');
 define(       'STR_NO_PASSWORD_SILLAJ', 'Mot de passe absent');
-define( 'STR_NO_RESPONSE_LOGIN_SILLAJ', 'No encrypted password found in your request ; you probably must enable javascript');
 
 // class Project
 define(         'STR_PROJECT_CREATED_SILLAJ', 'Projet créé');
