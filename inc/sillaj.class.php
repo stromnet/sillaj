@@ -1670,7 +1670,9 @@ class User {
     /**
      * Constructor
      */
-    function User() {        
+    function User() {   
+        // session.cookie_httponly should be set to true in php.ini to limit XSS
+        session_name('SILLAJSESSID');     
         session_start();
     }
 
