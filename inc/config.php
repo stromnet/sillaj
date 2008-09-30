@@ -74,6 +74,8 @@ define( 'STR_AUTHOR_EMAIL_SILLAJ', 'sillaj@gmail.com');
 define(       'BOO_OS_WIN_SILLAJ', strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');  // find OS so we can chose which locale format to use
 define(      'STR_CHARSET_SILLAJ', 'iso-8859-1');
 
+header('X-Powered-By:'. STR_APPLI_NAME_SILLAJ .'/'. STR_APPLI_VERSION_SILLAJ);
+
 // if pear is not found globally (in the include_path) we can try to add 
 // the bundled version to the include_path :
 // ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FN_ROOT_DIR_SILLAJ . 'lib/pear'); 
