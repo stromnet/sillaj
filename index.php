@@ -193,6 +193,6 @@ function smarty_function_calendar($params, &$smarty) {
             $strDays .= "  </tr>\n";
         }
     }    
-    return $strCalendar . $strDays . "</table>\n";
+    return $strCalendar . $strDays ."</table>\n";
 }
 ?>
