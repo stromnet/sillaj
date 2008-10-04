@@ -8,7 +8,7 @@
 <meta name="keywords" content="{$smarty.const.STR_META_KEYWORDS_SILLAJ}" />
 <meta name="author" content="{if empty($smarty.session.strEmail)}{$smarty.const.STR_ADMIN_EMAIL_SILLAJ}{else}{$smarty.session.strEmail}{/if}" />
 <meta name="robots" content="index,follow" />
-<meta name="generator" content="{$smarty.const.STR_APPLI_NAME_SILLAJ} - {$smarty.const.STR_APPLI_VERSION_SILLAJ}" />
+<meta name="generator" content="{$smarty.const.STR_APPLI_NAME_SILLAJ}/{$smarty.const.STR_APPLI_VERSION_SILLAJ}" />
 <meta name="DC.Language" content="{$smarty.session.strLocale}" scheme="RFC1766" />
 <meta name="DC.Publisher" content="{$smarty.const.STR_ADMIN_EMAIL_SILLAJ}" />
 <meta name="DC.Creator" content="{$smarty.const.STR_AUTHOR_SILLAJ} - {$smarty.const.STR_AUTHOR_EMAIL_SILLAJ}" />

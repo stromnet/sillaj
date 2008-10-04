@@ -1,4 +1,11 @@
-0.2.16 - 2007-09-18 rev. 23
+0.2.17 - 2008-10-03 rev. 30
+===========================
+- Add X-Powered-By
+- Add a name to the session
+- Code cleaning & small fixes (incl. days names for JSCal)
+- Added Opensearch functionality
+
+0.2.16 - 2007-11-13 rev. 23
 ===========================
 - code cleaning
 - fixed bug [ 1831290 ] problem when creating a new user
