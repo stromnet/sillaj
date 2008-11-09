@@ -19,7 +19,7 @@
         <updated>{$arrAtom[i].datUpdate|date_format_w3cdtf}</updated>
         <published>{$arrAtom[i].datEvent|date_format_w3cdtf}</published>
         <author>
-        <name>{$strUserId}</name>
+        <name>{$strUserId|escape:"html"}</name>
         <email></email>
         </author>
         <summary>{if ($arrAtom[i].timStart != '') && ($arrAtom[i].timEnd != '')}{$arrAtom[i].timStart} -&gt; {$arrAtom[i].timEnd} = {/if}{$arrAtom[i].timDuration}{if $arrAtom[i].strRem != ''} - {$arrAtom[i].strRem|escape:"html"}{/if}</summary> 
