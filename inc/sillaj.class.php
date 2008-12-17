@@ -1989,7 +1989,7 @@ class User {
     function validEmail($strEmail) {
         // http://www.iki.fi/markus.sipila/pub/emailvalidator.php
         if (!eregi("^[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$", $strEmail)) {
-   	        raiseError(STR_MAIL_INVALID_ADDRESS_SILLAJ .' : '. htmlspecialchars($strEmail));
+            raiseError(STR_MAIL_INVALID_ADDRESS_SILLAJ .' : '. htmlspecialchars($strEmail));
         }	
         return true;
     }
