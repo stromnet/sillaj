@@ -52,6 +52,8 @@ if (count($_POST) || !empty($_GET['intEventId'])) {
         // remember current project and task for the next input
         $smarty->assign('intLastTaskId', $_POST['intTaskId']);
         $smarty->assign('intLastProjectId', $_POST['intProjectId']);
+		$smarty->assign_by_ref('arrTask', $project->getTask($_POST['intProjectId'], true));
+		$booNeedFullTaskList = false;
     }
 }
 
