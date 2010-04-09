@@ -1599,8 +1599,8 @@ class Report {
             LEFT JOIN sillaj_task ON (sillaj_event.sillaj_task_intTaskId = sillaj_task.intTaskId)         
           WHERE (datEvent BETWEEN '$datStart' AND '$datEnd')
             AND (sillaj_event.sillaj_user_strUserId = '$strUserId')
-            AND (sillaj_project.booUseInReport = '1')
-            AND (sillaj_task.booUseInReport = '1')
+            AND ((sillaj_project.booUseInReport = '1') 
+			  OR(sillaj_task.booUseInReport = '1'))
         ");
             
         if (DB::isError($strReport)) {
