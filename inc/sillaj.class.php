@@ -1704,6 +1704,8 @@ class User {
         global $smarty;
         global $sillaj;
         
+
+		
         $smarty->assign('booDisplayMenu', false); // if we show an error message we don't want to display the menu
         
         // Check data from the form    
@@ -1711,65 +1713,81 @@ class User {
         
         if (empty($_POST['strUserId'])) {
             raiseError(STR_NO_LOGIN_SILLAJ);
-        }
+        }		
         
         if (empty($_POST['strPassword']) && (empty($_POST['strResponse']) && empty($_POST['booEdit']))) {
             raiseError(STR_NO_PASSWORD_SILLAJ);
         }
-        
+		
         // Check if 1 valid couple login/password 
         // If javascript is disabled we won't get the response but just the 
         // password in clear text. We can manage these two types of authentication              
         if (!empty($_POST['strResponse'])) {             
-            $strWhere = "('". $_POST['strResponse'] ."' = MD5(CONCAT(strPassword,'". $_SESSION['strNonce'] ."','". $_POST['strUserId'] ."')))";
+			$hdlPrepare = $db->prepare("
+				SELECT
+				  strUserId,
+				  strName,
+				  strFirstname,
+				  strEmail,
+				  booAllowOther,
+				  booUseShare,
+				  strLanguage,
+				  strTemplate
+				FROM sillaj_user
+				WHERE 
+				  strUserId = ?
+				  AND (? = MD5(CONCAT(strPassword, ?, ?)))
+            ");
+			$data = array($_POST['strUserId'], $_POST['strResponse'], $_SESSION['strNonce'], $_POST['strUserId']);
         }
         else {
-            $strWhere = "strPassword = MD5('". $_POST['strPassword'] ."')";            
-        }
-        
-        $arrAuthent = $db->getAll("
-            SELECT
-              strUserId,
-              strName,
-              strFirstname,
-              strEmail,
-              booAllowOther,
-              booUseShare,
-              strLanguage,
-              strTemplate
-            FROM sillaj_user
-            WHERE 
-              strUserId = '". $_POST['strUserId'] ."'
-              AND $strWhere
+			$hdlPrepare = $db->prepare("
+				SELECT
+				  strUserId,
+				  strName,
+				  strFirstname,
+				  strEmail,
+				  booAllowOther,
+				  booUseShare,
+				  strLanguage,
+				  strTemplate
+				FROM sillaj_user
+				WHERE 
+				  strUserId = ?
+				  AND strPassword = MD5(?)
             ");
-        
-        if (DB::isError($arrAuthent)) {
-            raiseError($arrAuthent->getMessage());
-        }
-        if (count($arrAuthent) == 0) {
+			$data = array($_POST['strUserId'], $_POST['strPassword']);
+        }        
+				
+		$res = $db->execute($hdlPrepare, $data);
+        if (DB::isError($res)) {
+            raiseError($res->getMessage());
+        }	
+		if ($res->numRows() == 0) {
             raiseError(STR_NO_AUTHENT_SILLAJ);
         }
-        if (count($arrAuthent) > 1) {
+        if ($res->numRows() > 1) {
             raiseError(STR_UNEXPECTED_AUTHENT_SILLAJ);
-        }
-        
+        }		
+		$res->fetchInto($arrAuthent);
+		        
         // remember values
-        $_SESSION[    'strUserId'] = $arrAuthent[0]['strUserId'];
-        $_SESSION[      'strName'] = $arrAuthent[0]['strName'];        
-        $_SESSION[ 'strFirstname'] = $arrAuthent[0]['strFirstname'];
-        $_SESSION[     'strEmail'] = $arrAuthent[0]['strEmail'];
-        $_SESSION['booAllowOther'] = $arrAuthent[0]['booAllowOther'];
-        $_SESSION[  'booUseShare'] = $arrAuthent[0]['booUseShare'];
+        $_SESSION[    'strUserId'] = $arrAuthent['strUserId'];
+        $_SESSION[      'strName'] = $arrAuthent['strName'];        
+        $_SESSION[ 'strFirstname'] = $arrAuthent['strFirstname'];
+        $_SESSION[     'strEmail'] = $arrAuthent['strEmail'];
+        $_SESSION['booAllowOther'] = $arrAuthent['booAllowOther'];
+        $_SESSION[  'booUseShare'] = $arrAuthent['booUseShare'];
         $_SESSION[ 'booIsAuthent'] = true;                 
         
         // set the preferred language if it exists, else we keep the default one
-        if (in_array($arrAuthent[0]['strLanguage'], $sillaj->getLanguage())) {
-            $_SESSION['strLocale'] = $arrAuthent[0]['strLanguage'];
+        if (in_array($arrAuthent['strLanguage'], $sillaj->getLanguage())) {
+            $_SESSION['strLocale'] = $arrAuthent['strLanguage'];
         }
         
         // set the preferred template if it exists, else we keep the default one
-        if (in_array($arrAuthent[0]['strTemplate'], $sillaj->getTemplate())) {
-            $_SESSION['strThemeName'] = $arrAuthent[0]['strTemplate'];
+        if (in_array($arrAuthent['strTemplate'], $sillaj->getTemplate())) {
+            $_SESSION['strThemeName'] = $arrAuthent['strTemplate'];
         }
        
         if ($booRedirect) {

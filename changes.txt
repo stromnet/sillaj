@@ -1,3 +1,11 @@
+﻿0.2.19 -  rev. 
+===========================
+- Use prepared statement on login to avoid SQL injection
+
+0.2.18 - 2010-04-09 rev. 41
+===========================
+- Corrected bug in sum of report
+
 0.2.17 - 2008-10-03 rev. 30
 ===========================
 - Add X-Powered-By
