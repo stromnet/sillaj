@@ -1693,7 +1693,7 @@ class User {
      * Check credentials in the database
      * We use a a nonce-based authentication and we store password encrypted in the database
      * 
-     * 1- the server generates a random nonce, sent with the login form
+     * 1- the server generates a random nonce, sent with the login form. See login.php
      * 2- before submitting the form, javascript will MD5 the password and
      *    will MD5 it, concatened with the nonce and the user login, and reset the 
      *    password so it's not sent in clear text 
@@ -1703,9 +1703,7 @@ class User {
         global $db;
         global $smarty;
         global $sillaj;
-        
 
-		
         $smarty->assign('booDisplayMenu', false); // if we show an error message we don't want to display the menu
         
         // Check data from the form    
