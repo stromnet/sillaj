@@ -5,9 +5,9 @@
 */
 
 require('./inc/config.php');
+$user->checkAuthent();
 header('Content-Type: text/javascript; charset='. STR_CHARSET_SILLAJ);
 
 $project = new Project;
 $smarty->assign_by_ref('arrTask', $project->getTask($_GET['intProjectId'], true));
 $smarty->display('frmEvent_taskOption.tpl');
-?>

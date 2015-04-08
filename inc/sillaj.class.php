@@ -1682,8 +1682,14 @@ class User {
      */
     function checkAuthent() {
         if (empty($_SESSION['booIsAuthent'])) {
-            $urlDest = $_SERVER['REQUEST_URI'];
-            header('Location: '. URL_ROOT_DIR_SILLAJ .'login.php?urlDest='. urlencode($urlDest));
+            global $want_json;
+            if($want_json) {
+                header("Status: 401 Unauthorized");
+            }
+            else{
+                $urlDest = $_SERVER['REQUEST_URI'];
+                header('Location: '. URL_ROOT_DIR_SILLAJ .'login.php?urlDest='. urlencode($urlDest));
+            }
             exit();
         }
         return true;

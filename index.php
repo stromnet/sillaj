@@ -91,7 +91,13 @@ $smarty->assign_by_ref(  'datTomorrow', date('Y-m-d', mktime(0, 0, 0, $arrDatEve
 $smarty->assign_by_ref( 'datYesterday', date('Y-m-d', mktime(0, 0, 0, $arrDatEvent[2], $arrDatEvent[3]-1, $arrDatEvent[1]))); // date's yesterday : prev meta
 
 $smarty->register_function('calendar', 'smarty_function_calendar'); // registering a smarty plugin to build the calendar
-$smarty->display('index.tpl');
+if($want_json) {
+	print json_encode($smarty->get_template_vars());
+}
+else
+{
+	$smarty->display('index.tpl');
+}
 
 
 /**

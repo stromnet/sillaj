@@ -101,6 +101,8 @@ require('sillaj.class.php');
 // user (name, lang, template...) when login
 $user = new User;
 
+$want_json = !empty($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json';
+
 // Set default theme
 if (empty($_SESSION['strThemeName'])) {
     $_SESSION['strThemeName'] = STR_TEMPLATE_SILLAJ; 
@@ -173,6 +175,12 @@ $db->setFetchMode(DB_FETCHMODE_ASSOC);
 * Display an error page with a message and exit
 */
 function raiseError($strErrorMessage) {
+    global $want_json;
+    if($want_json) {
+        print json_encode(array("error"=> $strErrorMessage));
+        exit;
+    }
+
     global $smarty;
 
     $smarty->assign('strContent', '<p class="error">'. $strErrorMessage .'</p>');

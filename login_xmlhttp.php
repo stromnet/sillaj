@@ -6,12 +6,12 @@
  * cookies so I can never get a hold on the PHPSESSID cookie)
  *   
  */
-header('Content-Type: text/javascript; charset='. STR_CHARSET_SILLAJ);
 require('./inc/config.php');
+header('Content-Type: text/javascript; charset='. STR_CHARSET_SILLAJ);
 // Validate form
 if (count($_POST)) {
     $user->execAuthent(false);
 }
-?>
-
-
+else{
+	print STR_NO_LOGIN_SILLAJ;
+}
