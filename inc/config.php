@@ -6,7 +6,7 @@ define(               'STR_LOCALE_SILLAJ', 'en');         // . default language 
                                                           //   see ISO 639-1          'en', 'nl'
                                                           //                          see /lang/ folder                                                          
 define(             'STR_TEMPLATE_SILLAJ', 'default');    // . default theme          dir from /templates  'default'
-define(       'INT_START_WEEK_DAY_SILLAJ', 0);            // . week starts on :       0 sunday,            0
+define(       'INT_START_WEEK_DAY_SILLAJ', 1);            // . week starts on :       0 sunday,            1
                                                           //                          1 monday,...                                                          
 define(         'INT_RSS_MAX_ITEM_SILLAJ', 20);           // . max items in           integer              20
                                                           //   RSS/Atom feed
@@ -29,21 +29,21 @@ date_default_timezone_set('Europe/Paris');                // . Time zone (for PH
                                                           //   see http://php.net/manual/en/timezones.php
 
 // Site Description
-define(        'STR_SITE_NAME_SILLAJ', 'Sillaj :: Demo');                 // site name
+define(        'STR_SITE_NAME_SILLAJ', 'Sillaj :: Stromnet');                 // site name
 define( 'STR_META_DESCRIPTION_SILLAJ', 'Time tracking for your projects');// site description (for meta tags)
 define(    'STR_META_KEYWORDS_SILLAJ', 'time,tracker,project,task');      // site keywords (for meta tags)
-define(      'STR_ADMIN_EMAIL_SILLAJ', 'you@example.com');                // Admin email
+define(      'STR_ADMIN_EMAIL_SILLAJ', 'johan@stromnet.se');                // Admin email
 
 // database parameters
 define(          'STR_DB_TYPE_SILLAJ', 'mysql');
 define(          'STR_DB_USER_SILLAJ', 'sillaj');
-define(          'STR_DB_PASS_SILLAJ', 'sillaj');
+define(          'STR_DB_PASS_SILLAJ', 'bolpEess');
 define(      'STR_DB_DATABASE_SILLAJ', 'sillaj');
-define(          'STR_DB_HOST_SILLAJ', 'localhost');
+define(          'STR_DB_HOST_SILLAJ', '172.28.10.2');
 
 // Mail parameters ; used to send a new password if the user forgot his.
-define(       'STR_MAIL_SERVER_SILLAJ', 'smtp.example.com'); // The mail server used to send mail
-define(        'STR_MAIL_PORT_SILLAJ', '25'); 					 // The server port used to send mail
+define(       'STR_MAIL_SERVER_SILLAJ', 'mail.stromnet.se'); // The mail server used to send mail
+define(        'STR_MAIL_PORT_SILLAJ', '587'); 					 // The server port used to send mail
 define( 'BOO_MAIL_SMTP_AUTHENT_SILLAJ', false);              // The mail server needs SMTP authentication ?
 define(   'STR_MAIL_SMTP_LOGIN_SILLAJ', 'login');            // SMTP authentication login (if BOO_MAIL_SMTP_LOGIN_SILLAJ == true)
 define('STR_MAIL_SMTP_PASSWORD_SILLAJ', 'password');         // SMTP authentication password (if BOO_MAIL_SMTP_LOGIN_SILLAJ == true)
@@ -62,7 +62,7 @@ $arrLanguageNameLookup = array(
 );
 
 // Application internals 
-define(        'BOO_DEBUG_SILLAJ', false);
+define(        'BOO_DEBUG_SILLAJ', true);
 define(      'FN_ROOT_DIR_SILLAJ', dirname($_SERVER['SCRIPT_FILENAME']) .'/');
 define(         'FN_CACHE_SILLAJ', FN_ROOT_DIR_SILLAJ .'cache/');
 // finding public path. It takes care if installed directly in the documentroot whereas in a subdir
@@ -79,7 +79,7 @@ header('X-Powered-By:'. STR_APPLI_NAME_SILLAJ .'/'. STR_APPLI_VERSION_SILLAJ);
 
 // if pear is not found globally (in the include_path) we can try to add 
 // the bundled version to the include_path :
-// ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FN_ROOT_DIR_SILLAJ . 'lib/pear'); 
+set_include_path(get_include_path() . PATH_SEPARATOR . FN_ROOT_DIR_SILLAJ . 'lib/pear'); 
 
 // Compress output
 ob_start('ob_gzhandler');
