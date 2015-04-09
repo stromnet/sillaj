@@ -889,7 +889,7 @@ class Event {
           SELECT -- DISTINCT
             datEvent
           FROM sillaj_event
-          WHERE (MONTH(datEvent) = MONTH('$datEvent'))
+          WHERE (EXTRACT(YEAR_MONTH FROM datEvent) = EXTRACT(YEAR_MONTH FROM '$datEvent'))
             AND (sillaj_user_strUserId = '". $_SESSION['strUserId'] ."')
           ORDER BY timStart
         ");
