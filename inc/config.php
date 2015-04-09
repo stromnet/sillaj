@@ -154,7 +154,7 @@ $smarty->assign(         'urlImgDir', URL_ROOT_DIR_SILLAJ .'templates/'. $_SESSI
 $smarty->assign(     'fnLanguageTpl', $_SESSION['strLocale'] .'/lang.txt');     // Language config file
 $smarty->assign_by_ref(    'arrMenu', $arrMenu);                                // Menu elements from lang/??/php.php
 $smarty->assign(    'booDisplayMenu', true);                                    // no menu on login, error, signup pages (see these pages)
-$smarty->assign_by_ref(     'arrCss', $sillaj->getCss());                       // list of availble CSS
+$smarty->assign(     'arrCss', $sillaj->getCss());                       // list of availble CSS
 
 // display error if template does not exist
 if (BOO_TEMPLATE_NOT_FOUND_SILLAJ) { // defined in SmartySillaj::smartySillaj()

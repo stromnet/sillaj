@@ -9,8 +9,8 @@ require('./inc/config.php');
 if (!count($_POST) && (empty($_SESSION['strUserId']))) {
     
     $smarty->assign(    'booDisplayMenu', false);                       // no need to display the menu (we're not logged)
-    $smarty->assign_by_ref('arrTemplate', $sillaj->getTemplate());      // get default template
-    $smarty->assign_by_ref('arrLanguage', $sillaj->getLanguage(true));  // get default language
+    $smarty->assign('arrTemplate', $sillaj->getTemplate());      // get default template
+    $smarty->assign('arrLanguage', $sillaj->getLanguage(true));  // get default language
     
     $smarty->display('user.tpl');
 }
@@ -31,8 +31,8 @@ elseif (!count($_POST) && (!empty($_SESSION['strUserId']))) {
     
     $smarty->assign(           'booEdit', true);                                 // to fill the fields
     $smarty->assign_by_ref(    'arrUser', $arrUser);
-    $smarty->assign_by_ref('arrTemplate', $sillaj->getTemplate());
-    $smarty->assign_by_ref('arrLanguage', $sillaj->getLanguage(true));
+    $smarty->assign('arrTemplate', $sillaj->getTemplate());
+    $smarty->assign('arrLanguage', $sillaj->getLanguage(true));
     
     $smarty->display('user.tpl');
 }

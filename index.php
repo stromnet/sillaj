@@ -35,24 +35,24 @@ if (count($_POST) || !empty($_GET['intEventId'])) {
         $smarty->assign(               'booEdit', true);
         $smarty->assign_by_ref(     'intEventId', $_REQUEST['intEventId']);
         $smarty->assign_by_ref('arrCurrentEvent', $arrCurrentEvent);  
-        $smarty->assign_by_ref(        'arrTask', $project->getTask($arrCurrentEvent['intProjectId'], true));      
+        $smarty->assign(        'arrTask', $project->getTask($arrCurrentEvent['intProjectId'], true));      
         $_SESSION['datEvent'] = $arrCurrentEvent['datEvent']; // Remember the current date
     }
     // submitted via a delete button
     elseif(!empty($_POST['inpDelete'])) {
-        $smarty->assign_by_ref('strMessage', $event->del());
+        $smarty->assign('strMessage', $event->del());
     }
     // submitted via validate change button (with booEdit hidden input)
     elseif (!empty($_POST['booEdit'])) {
-        $smarty->assign_by_ref('strMessage', $event->set());
+        $smarty->assign('strMessage', $event->set());
     }    
     // submitted via validate button
     else {
-        $smarty->assign_by_ref('strMessage', $event->add());
+        $smarty->assign('strMessage', $event->add());
         // remember current project and task for the next input
         $smarty->assign('intLastTaskId', $_POST['intTaskId']);
         $smarty->assign('intLastProjectId', $_POST['intProjectId']);
-		$smarty->assign_by_ref('arrTask', $project->getTask($_POST['intProjectId'], true));
+		$smarty->assign('arrTask', $project->getTask($_POST['intProjectId'], true));
 		$booNeedFullTaskList = false;
     }
 }
@@ -70,25 +70,25 @@ if (empty($_SESSION['datEvent'])) {
 $arrDatEvent = validIsoDate($_SESSION['datEvent']);
 
 // get a list of all projects to fill the projects dropdown list
-$smarty->assign_by_ref('arrProject', $project->get());
+$smarty->assign('arrProject', $project->get());
 
 // to fill the tasks dropdown list
 // we only need this full task list on a blank form
 // if we need a subset of the task list (ie a project is already selected), the
 // assign was already made above in "submitted via an edit button"
 if (((count($_POST) == 0) || (count($_GET) == 0)) && $booNeedFullTaskList) {
-    $smarty->assign_by_ref('arrTask', $task->get());
+    $smarty->assign('arrTask', $task->get());
 }
 
 $smarty->assign_by_ref(     'datEvent', $_SESSION['datEvent']); // which date are we displaying ?
 $smarty->assign_by_ref( 'intYearEvent', $arrDatEvent[1]);		// which year is the day we are displaying ?
 $smarty->assign_by_ref('intMonthEvent', $arrDatEvent[2]);		// which month is the day we are displaying ?
 $smarty->assign_by_ref(  'intDayEvent', $arrDatEvent[3]);		// which day is the day we are displaying ?
-$smarty->assign_by_ref(     'arrEvent', $event->getForDay($_SESSION['datEvent']));   // events for the date
-$smarty->assign_by_ref('arrEventMonth', $event->getForMonth($_SESSION['datEvent'])); // events for the month of the date dispalyed (for the calendar)
-$smarty->assign_by_ref(       'strSum', $event->sumByDay($_SESSION['datEvent']));	 // sum hour worked for the day we are displaying
-$smarty->assign_by_ref(  'datTomorrow', date('Y-m-d', mktime(0, 0, 0, $arrDatEvent[2], $arrDatEvent[3]+1, $arrDatEvent[1]))); // date's tomorrow : next meta
-$smarty->assign_by_ref( 'datYesterday', date('Y-m-d', mktime(0, 0, 0, $arrDatEvent[2], $arrDatEvent[3]-1, $arrDatEvent[1]))); // date's yesterday : prev meta
+$smarty->assign(     'arrEvent', $event->getForDay($_SESSION['datEvent']));   // events for the date
+$smarty->assign('arrEventMonth', $event->getForMonth($_SESSION['datEvent'])); // events for the month of the date dispalyed (for the calendar)
+$smarty->assign(       'strSum', $event->sumByDay($_SESSION['datEvent']));	 // sum hour worked for the day we are displaying
+$smarty->assign(  'datTomorrow', date('Y-m-d', mktime(0, 0, 0, $arrDatEvent[2], $arrDatEvent[3]+1, $arrDatEvent[1]))); // date's tomorrow : next meta
+$smarty->assign( 'datYesterday', date('Y-m-d', mktime(0, 0, 0, $arrDatEvent[2], $arrDatEvent[3]-1, $arrDatEvent[1]))); // date's yesterday : prev meta
 
 $smarty->register_function('calendar', 'smarty_function_calendar'); // registering a smarty plugin to build the calendar
 if($want_json) {

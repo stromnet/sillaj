@@ -13,7 +13,7 @@ $project = new Project;
 
 // No $_POST or $_GET data -> display the list of tasks
 if (!count($_POST) && !count($_GET)) {
-    $smarty->assign_by_ref('arrTask', $task->get());
+    $smarty->assign('arrTask', $task->get());
     $smarty->display('task.tpl');
 }
 // else $_GET data -> edit or add a task
@@ -32,27 +32,27 @@ elseif (count($_GET)) {
         $smarty->assign_by_ref(            'strRem', $arrTask[$_GET['intTaskId']]['strRem']);
         $smarty->assign_by_ref(          'booShare', $arrTask[$_GET['intTaskId']]['booShare']);
         $smarty->assign_by_ref(    'booUseInReport', $arrTask[$_GET['intTaskId']]['booUseInReport']);
-        $smarty->assign_by_ref('arrProjectSelected', $task->getProject($_GET['intTaskId']));
+        $smarty->assign('arrProjectSelected', $task->getProject($_GET['intTaskId']));
         $smarty->assign(             'strPageTitle', $smarty->get_template_vars('strPageTitle') . STR_SEP_SILLAJ . $arrTask[$_GET['intTaskId']]['strTask']);              
     }
     
-    $smarty->assign_by_ref('arrProject', $project->get());
+    $smarty->assign('arrProject', $project->get());
     $smarty->display('edit_task.tpl');
 }
 // else $_POST data -> validate the form
 elseif (count($_POST)) {   
     if (!empty($_POST['booDelete'])) {  
-        $smarty->assign_by_ref('strMessage', $task->del());
+        $smarty->assign('strMessage', $task->del());
     }
     else {
         if (empty($_POST['booEdit'])) {  
-            $smarty->assign_by_ref('strMessage', $task->add());
+            $smarty->assign('strMessage', $task->add());
         }
         else { 
-            $smarty->assign_by_ref('strMessage', $task->set());
+            $smarty->assign('strMessage', $task->set());
         }  
     }
-    $smarty->assign_by_ref('arrTask', $task->get());
+    $smarty->assign('arrTask', $task->get());
     $smarty->display('task.tpl');      
 }
 

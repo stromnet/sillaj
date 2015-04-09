@@ -7,5 +7,5 @@ $user->checkAuthent();
 header('Content-Type: text/javascript; charset='. STR_CHARSET_SILLAJ);
 
 $project = new Project;
-$smarty->assign_by_ref('arrProject', $project->get());
+$smarty->assign('arrProject', $project->get());
 $smarty->display('frmEvent_projectOption.tpl');

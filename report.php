@@ -14,7 +14,7 @@ if (!count($_GET)) {
     $task = new Task;    
     
     if (BOO_ALLOW_EVERYONE_REPORT_SILLAJ) {
-        $smarty->assign_by_ref('arrUser', $user->get());
+        $smarty->assign('arrUser', $user->get());
     }        
     
     // current year and month (for the following calculations)
@@ -37,24 +37,24 @@ if (!count($_GET)) {
     }
     
     // Prepare dates to populate date field according to the buttons click
-    $smarty->assign_by_ref( 'datStartPreviousWeek', mktime(0, 0, 0, $intCurMonth, $intCurDay - $intCurWeek + INT_START_WEEK_DAY_SILLAJ - 7, $intCurYear));
-    $smarty->assign_by_ref(   'datEndPreviousWeek', mktime(23, 59, 59, $intCurMonth, $intCurDay + (6 - $intCurWeek) + INT_START_WEEK_DAY_SILLAJ - 7, $intCurYear));
-    $smarty->assign_by_ref(  'datStartCurrentWeek', mktime(0, 0, 0, $intCurMonth, $intCurDay - $intCurWeek + INT_START_WEEK_DAY_SILLAJ, $intCurYear));
-    $smarty->assign_by_ref(    'datEndCurrentWeek', mktime(23, 59, 59, $intCurMonth, $intCurDay + (6 - $intCurWeek) + INT_START_WEEK_DAY_SILLAJ, $intCurYear));
-    $smarty->assign_by_ref('datStartPreviousMonth', mktime(0, 0, 0, $intCurMonth - 1, 1, $intCurYear));
-    $smarty->assign_by_ref(  'datEndPreviousMonth', mktime(0, 0, 0, $intCurMonth, 0, $intCurYear));
-    $smarty->assign_by_ref( 'datStartCurrentMonth', mktime(0, 0, 0, $intCurMonth, 1, $intCurYear));
-    $smarty->assign_by_ref(   'datEndCurrentMonth', mktime(0, 0, 0, $intCurMonth + 1, 0, $intCurYear));
-    $smarty->assign_by_ref( 'datStartPreviousYear', mktime(0, 0, 0, 1, 1, $intCurYear - 1));
-    $smarty->assign_by_ref(   'datEndPreviousYear', mktime(0, 0, 0, 12, 31, $intCurYear - 1));
-    $smarty->assign_by_ref(  'datStartCurrentYear', mktime(0, 0, 0, 1, 1, $intCurYear));
-    $smarty->assign_by_ref(    'datEndCurrentYear', mktime(0, 0, 0, 12, 31, $intCurYear));
+    $smarty->assign( 'datStartPreviousWeek', mktime(0, 0, 0, $intCurMonth, $intCurDay - $intCurWeek + INT_START_WEEK_DAY_SILLAJ - 7, $intCurYear));
+    $smarty->assign(   'datEndPreviousWeek', mktime(23, 59, 59, $intCurMonth, $intCurDay + (6 - $intCurWeek) + INT_START_WEEK_DAY_SILLAJ - 7, $intCurYear));
+    $smarty->assign(  'datStartCurrentWeek', mktime(0, 0, 0, $intCurMonth, $intCurDay - $intCurWeek + INT_START_WEEK_DAY_SILLAJ, $intCurYear));
+    $smarty->assign(    'datEndCurrentWeek', mktime(23, 59, 59, $intCurMonth, $intCurDay + (6 - $intCurWeek) + INT_START_WEEK_DAY_SILLAJ, $intCurYear));
+    $smarty->assign('datStartPreviousMonth', mktime(0, 0, 0, $intCurMonth - 1, 1, $intCurYear));
+    $smarty->assign(  'datEndPreviousMonth', mktime(0, 0, 0, $intCurMonth, 0, $intCurYear));
+    $smarty->assign( 'datStartCurrentMonth', mktime(0, 0, 0, $intCurMonth, 1, $intCurYear));
+    $smarty->assign(   'datEndCurrentMonth', mktime(0, 0, 0, $intCurMonth + 1, 0, $intCurYear));
+    $smarty->assign( 'datStartPreviousYear', mktime(0, 0, 0, 1, 1, $intCurYear - 1));
+    $smarty->assign(   'datEndPreviousYear', mktime(0, 0, 0, 12, 31, $intCurYear - 1));
+    $smarty->assign(  'datStartCurrentYear', mktime(0, 0, 0, 1, 1, $intCurYear));
+    $smarty->assign(    'datEndCurrentYear', mktime(0, 0, 0, 12, 31, $intCurYear));
     $smarty->assign(                      'booCal', true); // use js calendar : call the js in the header
     $smarty->assign_by_ref(        'arrMonthNames', $arrMonthNames);
     $smarty->assign_by_ref(            'arrDayIni', $arrDayIni);
-    $smarty->assign_by_ref(     'strDateFormatCal', dateFormatPhpToJsCal(STR_DATE_FORMAT_SILLAJ)); // convert date format string 
-    $smarty->assign_by_ref(           'arrProject', $project->get()); // list of all projects (for gantt form)
-    $smarty->assign_by_ref(              'arrTask', $task->get());    // list of all tasks (for gantt form)
+    $smarty->assign(     'strDateFormatCal', dateFormatPhpToJsCal(STR_DATE_FORMAT_SILLAJ)); // convert date format string 
+    $smarty->assign(           'arrProject', $project->get()); // list of all projects (for gantt form)
+    $smarty->assign(              'arrTask', $task->get());    // list of all tasks (for gantt form)
  
     $smarty->display('frmReport.tpl', $_SESSION['strUserId'] . $_SESSION['strLocale']);
 }
@@ -103,19 +103,19 @@ else {
     $report = new Report;
     
     if (empty($_GET['radType']) || ($_GET['radType'] == 'project')) {
-        $smarty->assign_by_ref(  'arrReport', $report->getProject($strUserId, $strSort, $datStart, $datEnd));
+        $smarty->assign(  'arrReport', $report->getProject($strUserId, $strSort, $datStart, $datEnd));
         $smarty->assign(      'booByProject', true);
     }
     else {
-        $smarty->assign_by_ref(  'arrReport', $report->getTask($strUserId, $strSort, $datStart, $datEnd));
+        $smarty->assign(  'arrReport', $report->getTask($strUserId, $strSort, $datStart, $datEnd));
         $smarty->assign(      'booByProject', false);
     }
     
     // assign some more useful variables
-    $smarty->assign_by_ref(      'arrUser', $user->get($strUserId)); // to get the real name of the user 
+    $smarty->assign(      'arrUser', $user->get($strUserId)); // to get the real name of the user 
     $smarty->assign_by_ref(     'datStart', $datStart);       
     $smarty->assign_by_ref(       'datEnd', $datEnd);    
-    $smarty->assign_by_ref( 'strSumWorked', $report->getSumWorked($strUserId, $datStart, $datEnd));
+    $smarty->assign( 'strSumWorked', $report->getSumWorked($strUserId, $datStart, $datEnd));
     $smarty->assign(           'booDetail', !empty($_GET['cbxDetail']));
     $smarty->assign(        'booOtherUser', $strUserId != $_SESSION['strUserId']);
         
