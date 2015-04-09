@@ -10,9 +10,5 @@ $intRes = $db->query("
   WHERE strUserId  = 'test'
 ");
 
-if (DB::isError($intRes)) {
-    raiseError($intRes->getMessage());
-}
-
 displayMessage('Password reset for user "Test"');
 ?>

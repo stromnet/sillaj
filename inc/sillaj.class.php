@@ -1,5 +1,16 @@
 <?php
 /******************************************************************************/
+/* Helper function to mimic old DB::getAssoc; where we create associative array
+ * with first column as key, and second column as value
+ */
+function fetchAssoc($result) {
+    if($result->columnCount() == 2)
+        return array_map('reset',
+            $result->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP|PDO::FETCH_UNIQUE));
+    else
+        return $result->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP|PDO::FETCH_UNIQUE);
+
+}
 /**
  * Manage projects
  */
@@ -29,7 +40,7 @@ class Project {
             $strShared = "OR (booShare = '1')";
         }
             
-        $arrProject = $db->getAssoc("
+        $arrProject = $db->query("
           SELECT
             intProjectId,
             $strProject
@@ -42,10 +53,8 @@ class Project {
           ORDER BY sillaj_project.strProject
         ");
 
-        if (DB::isError($arrProject)) {
-            raiseError($arrProject->getMessage());
-        }                         
-        return $arrProject;
+        #return $arrProject->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP|PDO::FETCH_UNIQUE);
+        return fetchAssoc($arrProject);
     }
             
     
@@ -78,14 +87,14 @@ class Project {
             $strWhere
           ORDER BY sillaj_task.strTask                    
         ";
-        
-        $arrTask = $booAll ? $db->getAssoc($strQuery) : $db->getCol($strQuery);
-        
-        if (DB::isError($arrTask)) {
-            raiseError($arrTask->getMessage());
-        }
 
-        return $arrTask;
+        $res = $db->query($strQuery);
+        
+
+        if($booAll)
+            return fetchAssoc($res);
+        else
+            return $res->fetchAll(PDO::FETCH_COLUMN);
     }
     
     /**
@@ -112,7 +121,7 @@ class Project {
             $strUserWhere = "AND (strUserId = '". $_SESSION['strUserId'] ."')"; 
         }
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             intEventId,
             $strMain,
@@ -132,10 +141,7 @@ class Project {
           ORDER BY $strOrder
         ");        
 
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }                    
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
 
     /**
@@ -160,7 +166,7 @@ class Project {
             $strUserWhere = "AND (strUserId = '". $_SESSION['strUserId'] ."')"; 
         }
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             $strMain,
             intTaskId AS intMainId,
@@ -177,10 +183,7 @@ class Project {
           ORDER BY datMin, datMax, strMain
         ");        
 
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }                         
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
 
     /**
@@ -226,46 +229,42 @@ class Project {
         $arrInput = $this->checkInput();
         
         // Add to the project table
-        $db->query('BEGIN');
-        $arrProject = $db->query("
-          INSERT INTO sillaj_project
-            (intProjectId, sillaj_user_strUserId, strProject, booDisplay, strRem, booShare, booUseInReport)
-          VALUES (
-            NULL,
-            '". $_SESSION['strUserId'] ."',
-            '". $arrInput['strProject'] ."',
-            '1',
-            '". $arrInput['strRem'] ."',
-            '". $arrInput['booShare'] ."',
-            '". $arrInput['booUseInReport'] ."'
-          )"
-        );
+        try {
+            $db->beginTransaction();
+            $arrProject = $db->query("
+                INSERT INTO sillaj_project
+                (intProjectId, sillaj_user_strUserId, strProject, booDisplay, strRem, booShare, booUseInReport)
+                VALUES (
+                    NULL,
+                    '". $_SESSION['strUserId'] ."',
+                    '". $arrInput['strProject'] ."',
+                    '1',
+                    '". $arrInput['strRem'] ."',
+                    '". $arrInput['booShare'] ."',
+                    '". $arrInput['booUseInReport'] ."'
+                )"
+            );
         
-        if (DB::isError($arrProject)) {
-            $db->query('ROLLBACK');
-            raiseError($arrProject->getMessage());
-        }
-        
-        // Get a new value for the primary key
-        $intProjectId = DBSillaj::lastId();
-        
-        // Add to the link table
-        if (! empty($_POST['arrTask'])) {
-            for($i=0;$i<count($_POST['arrTask']);$i++) {
-                $arrProject = $db->query("
-                  INSERT INTO sillaj_task_project
-                    (sillaj_task_intTaskId, sillaj_project_intProjectId)
-                  VALUES (
-                    '". $_POST['arrTask'][$i] ."',
-                    $intProjectId
-                  )");
-                if (DB::isError($arrProject)) {
-                    $db->query('ROLLBACK');
-                    raiseError($arrProject->getMessage());
-                }
+            // Get a new value for the primary key
+            $intProjectId = $db->lastInsertId();
+            
+            // Add to the link table
+            if (! empty($_POST['arrTask'])) {
+                for($i=0;$i<count($_POST['arrTask']);$i++) {
+                    $arrProject = $db->query("
+                      INSERT INTO sillaj_task_project
+                        (sillaj_task_intTaskId, sillaj_project_intProjectId)
+                      VALUES (
+                        '". $_POST['arrTask'][$i] ."',
+                        $intProjectId
+                      )");
+                } 
             } 
-        } 
-        $db->query('COMMIT');
+            $db->commit();
+        }catch(Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
         return STR_PROJECT_CREATED_SILLAJ;
     }
     
@@ -282,54 +281,44 @@ class Project {
         $arrInput = $this->checkInput();
         
         // update the project table
-        $db->query('BEGIN');
-        $arrProject = $db->query("
-          UPDATE sillaj_project
-          SET
-            strProject = '". $arrInput['strProject'] ."',
-            strRem = '". $arrInput['strRem']."',
-            booShare = '". $arrInput['booShare'] ."',
-            booUseInReport = '". $arrInput['booUseInReport'] ."'
-          WHERE
-            (intProjectId = ". $_POST['intProjectId'] .")"
-        );
-                
-        if (DB::isError($arrProject)) {
-            $db->query('ROLLBACK');
-            raiseError($arrProject->getMessage());
-        }
-
-        // delete the old associated tasks        
-        $arrProject = $db->query("
-          DELETE FROM sillaj_task_project          
-          WHERE
-            (sillaj_project_intProjectId = ". $_POST['intProjectId'] .")"
-        );
-        
-        if (DB::isError($arrProject)) {
-            $db->query('ROLLBACK');
-            raiseError($arrProject->getMessage());
-        }
-        
-        // Add the new associated tasks to the link table
-        if (!empty($_POST['arrTask'])) {
-            for($i=0;$i<count($_POST['arrTask']);$i++) {
-                $arrProject = $db->query("
-                  INSERT INTO sillaj_task_project
-                    (sillaj_task_intTaskId, sillaj_project_intProjectId)
-                  VALUES (
-                    '".$_POST['arrTask'][$i]."',
-                    ".$_POST['intProjectId']."
-                  )");
-                  
-                if (DB::isError($arrProject)) {
-                    $db->query('ROLLBACK');
-                    raiseError($arrProject->getMessage());
+        try {
+            $db->beginTransaction();
+            $arrProject = $db->query("
+              UPDATE sillaj_project
+              SET
+                strProject = '". $arrInput['strProject'] ."',
+                strRem = '". $arrInput['strRem']."',
+                booShare = '". $arrInput['booShare'] ."',
+                booUseInReport = '". $arrInput['booUseInReport'] ."'
+              WHERE
+                (intProjectId = ". $_POST['intProjectId'] .")"
+            );
+                    
+            // delete the old associated tasks        
+            $arrProject = $db->query("
+              DELETE FROM sillaj_task_project          
+              WHERE
+                (sillaj_project_intProjectId = ". $_POST['intProjectId'] .")"
+            );
+            
+            // Add the new associated tasks to the link table
+            if (!empty($_POST['arrTask'])) {
+                for($i=0;$i<count($_POST['arrTask']);$i++) {
+                    $arrProject = $db->query("
+                      INSERT INTO sillaj_task_project
+                        (sillaj_task_intTaskId, sillaj_project_intProjectId)
+                      VALUES (
+                        '".$_POST['arrTask'][$i]."',
+                        ".$_POST['intProjectId']."
+                      )");
                 }
-            }
-        } 
-        
-        $db->query('COMMIT');
+            } 
+            
+            $db->commit();
+        }catch(Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
         return STR_PROJECT_MODIFIED_SILLAJ;        
     }
     
@@ -348,10 +337,6 @@ class Project {
           WHERE intProjectId = ". $_POST['intProjectId'] 
         );
           
-        if (DB::isError($arrProject)) {
-            raiseError($arrProject->getMessage());
-        }
-        
         return STR_PROJECT_DELETED_SILLAJ;
     }
     
@@ -361,17 +346,13 @@ class Project {
     function canModify($intProjectId) {                
         global $db;
         
-        $strUserId = $db->getOne("
+        $strUserId = $db->query("
           SELECT
             sillaj_user_strUserId
           FROM sillaj_project            
           WHERE (intProjectId = $intProjectId)
-        ");
+        ")->fetchColumn();
             
-        if (DB::isError($strUserId)) {
-            raiseError($strUserId->getMessage());
-        }   
-        
         if ($strUserId != $_SESSION['strUserId']) { 
              raiseError(STR_PROJECT_EDIT_NOT_ALLOWED_SILLAJ);
         }
@@ -383,18 +364,15 @@ class Project {
     function canSee($intProjectId) {                
         global $db;
         
-        $arrRes = $db->getRow("
+        $arrRes = $db->query("
           SELECT
             sillaj_user_strUserId,
             booShare
           FROM sillaj_project            
           WHERE (intProjectId = $intProjectId)   
           LIMIT 1        
-        ");
+        ")->fetch();
             
-        if (DB::isError($arrRes)) {
-            raiseError($arrRes->getMessage());
-        }   
         if (($arrRes['sillaj_user_strUserId'] != $_SESSION['strUserId']) && !$arrRes['booShare']) { 
              raiseError(STR_PROJECT_EDIT_NOT_ALLOWED_SILLAJ);
         }
@@ -413,16 +391,12 @@ class Project {
            $strUserWhere = "AND (sillaj_user_strUserId = '". $_SESSION['strUserId'] ."')"; 
         }
         
-        $strSum = $db->getOne("
+        $strSum = $db->query("
           SELECT
             TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(timDuration))), '%H:%i')
           FROM sillaj_event            
           WHERE ((sillaj_project_intProjectId = $intProjectId) $strUserWhere)
-        ");
-            
-        if (DB::isError($strSum)) {
-            raiseError($strSum->getMessage());
-        }   
+        ")->fetchColumn();
         
         return $strSum;
     }
@@ -454,7 +428,7 @@ class Task {
             $strShared = "OR (booShare = '1')";
         }                   
         
-        $arrTask = $db->getAssoc("
+        $arrTask = $db->query("
           SELECT
             intTaskId,
             $strTask
@@ -466,12 +440,8 @@ class Task {
             $strWhere
           ORDER BY sillaj_task.strTask
         ");
-            
-        if (DB::isError($arrTask)) {
-            raiseError($arrTask->getMessage());
-        }
        
-        return $arrTask;
+         return fetchAssoc($arrTask);
     }    
     
     /**
@@ -489,7 +459,7 @@ class Task {
             $strProject = "CASE WHEN booShare = '1' THEN CONCAT('* ', strProject) ELSE strProject END AS strProject";           
         }
         
-        $arrTask = $db->getCol("
+        $arrTask = $db->query("
            SELECT
             intProjectId,
             $strProject
@@ -501,12 +471,8 @@ class Task {
             AND (sillaj_task_intTaskId = $intTaskId)
           ORDER BY strProject                    
         ");
-            
-        if (DB::isError($arrTask)) {
-            raiseError($arrTask->getMessage());
-        }
       
-        return $arrTask;
+        return $arrTask->fetchAll(PDO::FETCH_COLUMN);
     }
     
     /**
@@ -533,7 +499,7 @@ class Task {
             $strUserWhere = "AND (strUserId = '". $_SESSION['strUserId'] ."')"; 
         }
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             intEventId,
             $strSub,
@@ -553,10 +519,7 @@ class Task {
           ORDER BY $strOrder
         ");
         
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }                        
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
     
      /**
@@ -581,7 +544,7 @@ class Task {
             $strUserWhere = "AND (strUserId = '". $_SESSION['strUserId'] ."')"; 
         }
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             $strMain,
             intProjectId AS intMainId,
@@ -598,10 +561,7 @@ class Task {
           ORDER BY datMin, datMax, strMain
         ");
 
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }                         
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
 
     
@@ -649,47 +609,43 @@ class Task {
         $arrInput = $this->checkInput();        
         
         // Add to the task table
-        $db->query('BEGIN');
-        $arrTask = $db->query("
-          INSERT INTO sillaj_task
-            (intTaskId, sillaj_user_strUserId, strTask, booDisplay, strRem, booShare, booUseInReport)
-          VALUES (
-            NULL,
-            '". $_SESSION['strUserId'] ."',
-            '". $arrInput['strTask'] ."',
-            '1',
-            '". $arrInput['strRem'] ."',
-            '". $arrInput['booShare'] ."',
-            '". $arrInput['booUseInReport'] ."'
-          )"
-        );
-        
-        if (DB::isError($arrTask)) {
-            $db->query('ROLLBACK');
-            raiseError($arrTask->getMessage());
-        }
-        
-        // Get a new value for the primary key
-        $intTaskId = DBSillaj::lastId();
-        
-        // Add to the link table
-        if (! empty($_POST['arrProject'])) {
-            for($i=0;$i<count($_POST['arrProject']);$i++) {
-                $arrTask = $db->query("
-                  INSERT INTO sillaj_task_project
-                    (sillaj_task_intTaskId, sillaj_project_intProjectId)
-                  VALUES (
-                    $intTaskId,
-                    '". $_POST['arrProject'][$i] ."'
-                  )");
-                if (DB::isError($arrTask)) {
-                    $db->query('ROLLBACK');
-                    raiseError($arrTask->getMessage());
-                }
+        try {
+            $db->beginTransaction();
+            $arrTask = $db->query("
+              INSERT INTO sillaj_task
+                (intTaskId, sillaj_user_strUserId, strTask, booDisplay, strRem, booShare, booUseInReport)
+              VALUES (
+                NULL,
+                '". $_SESSION['strUserId'] ."',
+                '". $arrInput['strTask'] ."',
+                '1',
+                '". $arrInput['strRem'] ."',
+                '". $arrInput['booShare'] ."',
+                '". $arrInput['booUseInReport'] ."'
+              )"
+            );
+            
+            // Get a new value for the primary key
+            $intTaskId = $db->lastInsertId();
+            
+            // Add to the link table
+            if (! empty($_POST['arrProject'])) {
+                for($i=0;$i<count($_POST['arrProject']);$i++) {
+                    $arrTask = $db->query("
+                      INSERT INTO sillaj_task_project
+                        (sillaj_task_intTaskId, sillaj_project_intProjectId)
+                      VALUES (
+                        $intTaskId,
+                        '". $_POST['arrProject'][$i] ."'
+                      )");
+                } 
             } 
-        } 
-        
-        $db->query('COMMIT');
+            
+            $db->commit();
+        }catch(Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
         return STR_TASK_CREATED_SILLAJ;
     }
     
@@ -706,54 +662,44 @@ class Task {
         $arrInput = $this->checkInput();
         
         // update the task table
-        $db->query('BEGIN');
-        $arrTask = $db->query("
-          UPDATE sillaj_task
-          SET
-            strTask = '". $arrInput['strTask'] ."',
-            strRem = '". $arrInput['strRem'] ."',
-            booShare = '". $arrInput['booShare'] ."',
-            booUseInReport = '". $arrInput['booUseInReport'] ."'
-          WHERE
-            (intTaskId = '". $_POST['intTaskId'] ."')
-        ");
-                
-        if (DB::isError($arrTask)) {
-            $db->query('ROLLBACK');
-            raiseError($arrTask->getMessage());
-        }
-
-        // delete the old tasks        
-        $arrTask = $db->query("
-          DELETE FROM sillaj_task_project
-          WHERE
-            (sillaj_task_intTaskId = ". $_POST['intTaskId'] .")
-        ");
-        
-        if (DB::isError($arrTask)) {
-            $db->query('ROLLBACK');
-            raiseError($arrTask->getMessage());
-        }
-        
-        // Add the new projects to the link table
-        if (!empty($_POST['arrProject'])) {
-            for($i=0;$i<count($_POST['arrProject']);$i++) {
-                $arrTask = $db->query("
-                  INSERT INTO sillaj_task_project
-                    (sillaj_task_intTaskId, sillaj_project_intProjectId)
-                  VALUES (
-                    ". $_POST['intTaskId'] .",
-                    '". $_POST['arrProject'][$i] ."'
-                  )");
-                  
-                if (DB::isError($arrTask)) {
-                    $db->query('ROLLBACK');
-                    raiseError($arrTask->getMessage());
+        try {
+            $db->beginTransaction();
+            $arrTask = $db->query("
+              UPDATE sillaj_task
+              SET
+                strTask = '". $arrInput['strTask'] ."',
+                strRem = '". $arrInput['strRem'] ."',
+                booShare = '". $arrInput['booShare'] ."',
+                booUseInReport = '". $arrInput['booUseInReport'] ."'
+              WHERE
+                (intTaskId = '". $_POST['intTaskId'] ."')
+            ");
+                    
+            // delete the old tasks        
+            $arrTask = $db->query("
+              DELETE FROM sillaj_task_project
+              WHERE
+                (sillaj_task_intTaskId = ". $_POST['intTaskId'] .")
+            ");
+            
+            // Add the new projects to the link table
+            if (!empty($_POST['arrProject'])) {
+                for($i=0;$i<count($_POST['arrProject']);$i++) {
+                    $arrTask = $db->query("
+                      INSERT INTO sillaj_task_project
+                        (sillaj_task_intTaskId, sillaj_project_intProjectId)
+                      VALUES (
+                        ". $_POST['intTaskId'] .",
+                        '". $_POST['arrProject'][$i] ."'
+                      )");
                 }
-            }
-        }  
+            }  
         
-        $db->query('COMMIT');
+            $db->commit();
+        }catch(Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
         return STR_TASK_MODIFIED_SILLAJ;
     }
     
@@ -771,10 +717,6 @@ class Task {
           SET booDisplay = '0'
           WHERE intTaskId = ". $_POST['intTaskId'] 
         );
-          
-        if (DB::isError($arrTask)) {
-            raiseError($arrTask->getMessage());
-        }
         
         return STR_TASK_DELETED_SILLAJ;
     }
@@ -785,16 +727,13 @@ class Task {
     function canModify($intTaskId) {
         global $db;
         
-        $strUserId = $db->getOne("
+        $strUserId = $db->query("
           SELECT
             sillaj_user_strUserId
           FROM sillaj_task
           WHERE (intTaskId = $intTaskId)
-        ");
+        ")->fetchColumn();
             
-        if (DB::isError($strUserId)) {
-            raiseError($strUserId->getMessage());
-        }   
         if ($strUserId != $_SESSION['strUserId']) { 
              raiseError(STR_TASK_EDIT_NOT_ALLOWED_SILLAJ);
         }
@@ -806,18 +745,15 @@ class Task {
     function canSee($intTaskId) {
         global $db;
         
-        $arrRes = $db->getRow("
+        $arrRes = $db->query("
           SELECT
             sillaj_user_strUserId,
             booShare
           FROM sillaj_task
           WHERE (intTaskId = $intTaskId)
           LIMIT 1
-        ");
+        ")->fetch();
             
-        if (DB::isError($arrRes)) {
-            raiseError($arrRes->getMessage());
-        }   
         if (($arrRes['sillaj_user_strUserId'] != $_SESSION['strUserId']) && !$arrRes['booShare']) { 
              raiseError(STR_TASK_EDIT_NOT_ALLOWED_SILLAJ);
         }
@@ -836,18 +772,14 @@ class Task {
            $strUserWhere = "AND (sillaj_user_strUserId = '". $_SESSION['strUserId'] ."')"; 
         }
         
-        $strSum = $db->getOne("
+        $strSum = $db->query("
           SELECT
             TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(timDuration))), '%H:%i')
           FROM sillaj_event            
           WHERE ((sillaj_task_intTaskId = $intTaskId) $strUserWhere)
         ");
             
-        if (DB::isError($strSum)) {
-            raiseError($strSum->getMessage());
-        }   
-        
-        return $strSum;
+        return $strSum->fetchColumn();
     }
     
 } // end class Task
@@ -868,7 +800,7 @@ class Event {
             raiseError(STR_NO_EVENT_SELECTED_SILLAJ);
         }
        
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             intEventId,
             sillaj_task_intTaskId AS intTaskId,
@@ -889,9 +821,8 @@ class Event {
           LIMIT 1
         ");
 
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage()); 
-        }
+        $arrEvent = $arrEvent->fetchAll();
+
         if (count($arrEvent) == 1) {
             return $arrEvent[0];
         }
@@ -920,7 +851,7 @@ class Event {
             $strSub = "strTask AS strSub";  
         }
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             intEventId,
             $strSub,
@@ -940,11 +871,7 @@ class Event {
           ORDER BY timStart DESC, timDuration DESC, strProject, strTask 
         ");
 
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage()); 
-        }
-           
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
     
     /**
@@ -958,7 +885,7 @@ class Event {
             raiseError(STR_NO_DATE_SELECTED_SILLAJ);
         }
         
-        $arrEvent = $db->getCol("
+        $arrEvent = $db->query("
           SELECT -- DISTINCT
             datEvent
           FROM sillaj_event
@@ -966,12 +893,8 @@ class Event {
             AND (sillaj_user_strUserId = '". $_SESSION['strUserId'] ."')
           ORDER BY timStart
         ");
-            
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }
            
-        return $arrEvent;
+        return $arrEvent->fetchAll(PDO::FETCH_COLUMN);
     }
     
     /**
@@ -993,7 +916,7 @@ class Event {
             $strTask = "strTask AS strTask";  
         //}
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             intEventId,
             $strTask,
@@ -1012,12 +935,8 @@ class Event {
           ORDER BY 
             datEvent DESC
           LIMIT $intItems");
-            
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }
         
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
     
     /**
@@ -1058,10 +977,6 @@ class Event {
           )"
         );
         
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }
-        
         // add task after midnight
         if (isset($timEnd2)) {
         
@@ -1096,9 +1011,6 @@ class Event {
               )"
             );
             
-            if (DB::isError($arrEvent)) {
-                raiseError($arrEvent->getMessage());
-            }
             return STR_EVENT_CREATED_SILLAJ .' '. STR_EVENT_CREATED_2DAYS_SILLAJ;
         }
               
@@ -1133,10 +1045,6 @@ class Event {
           WHERE (intEventId = '". $_POST['intEventId'] ."')
         ");
             
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }
-           
         return STR_EVENT_MODIFIED_SILLAJ;
     }
     
@@ -1173,12 +1081,12 @@ class Event {
     function getDateLastUpdate() {
         global $db;
         
-        return $db->getOne("
+        return $db->query("
           SELECT
             UNIX_TIMESTAMP(MAX(datUpdate))
            FROM
             sillaj_event          
-        ");
+        ")->fetchColumn();
     }
     
     /**
@@ -1200,10 +1108,6 @@ class Event {
           WHERE (intEventId = '". $_POST['intEventId'] ."')
         ");
             
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }
-           
         return STR_EVENT_DELETED_SILLAJ;
     }
     
@@ -1217,16 +1121,13 @@ class Event {
             raiseError(STR_NO_EVENT_SELECTED_SILLAJ);
         }
         
-        $strUserId = $db->getOne("
+        $strUserId = $db->query("
           SELECT
             sillaj_user_strUserId
           FROM sillaj_event           
           WHERE (intEventId = $intEventId)
-        ");
+        ")->fetchColumn();
             
-        if (DB::isError($strUserId)) {
-            raiseError($strUserId->getMessage());
-        }   
         if ($strUserId != $_SESSION['strUserId']) { 
              raiseError(STR_EVENT_EDIT_NOT_ALLOWED_SILLAJ);
         }
@@ -1347,7 +1248,7 @@ class Event {
             raiseError(STR_NO_DATE_SELECTED_SILLAJ);
         }
         
-        $strSum = $db->getOne("
+        $strSum = $db->query("
           SELECT
             TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(timDuration))),'%H:%i') AS strSum
           FROM sillaj_event           
@@ -1355,11 +1256,7 @@ class Event {
             AND (sillaj_user_strUserId = '". $_SESSION['strUserId'] ."')
         ");
             
-        if (DB::isError($strSum)) {
-            raiseError($strSum->getMessage());
-        }  
-        
-        return $strSum; 
+        return $strSum->fetchColumn(); 
     }
     
     
@@ -1379,7 +1276,7 @@ class Event {
             $strSub = 'strTask AS strSub';
         }
         
-        $arrEvent = $db->getAll("
+        $arrEvent = $db->query("
           SELECT
             intEventId,
             $strSub,
@@ -1404,10 +1301,7 @@ class Event {
         ");
         
         
-        if (DB::isError($arrEvent)) {
-            raiseError($arrEvent->getMessage());
-        }                         
-        return $arrEvent;
+        return $arrEvent->fetchAll();
     }
 } // end Class Event
 
@@ -1452,10 +1346,6 @@ class Report {
               intProjectId
         ");
              
-        if (DB::isError($arrReport)) {
-            raiseError($arrReport->getMessage());
-        }  
-        
         // Then we join our temporary table to the global table, sorted by time or name
         
         // first check if we use shared project/tasks
@@ -1468,7 +1358,7 @@ class Report {
             $strSub = "strTask AS strSub";  
         }
         
-        $arrReport = $db->getAll("                  
+        $arrReport = $db->query("                  
           SELECT        
             intProjectId AS intMainId,
             CAST(TIME_FORMAT(SEC_TO_TIME(timDurationTotProject), '%H:%i') AS CHAR(8)) AS timDurationTotMain,
@@ -1491,12 +1381,8 @@ class Report {
             intProjectId, intTaskId
           ORDER BY
             $strOrderBy
-        ");
+        ")->fetchAll();
            
-        if (DB::isError($arrReport)) {
-            raiseError($arrReport->getMessage());
-        }         
-        
         // clean the temporary table 
         $db->query('DROP TABLE report_project');
         
@@ -1537,10 +1423,6 @@ class Report {
               intTaskId
         ");                      
               
-        if (DB::isError($arrReport)) {
-            raiseError($arrReport->getMessage());
-        }  
-        
         // Then we join our temporary table to the global table, sorted by time or name
         
         // first check if we use shared project/tasks
@@ -1553,7 +1435,7 @@ class Report {
             $strMain = "strTask AS strMain";  
         }
         
-        $arrReport = $db->getAll("                  
+        $arrReport = $db->query("                  
           SELECT        
             intTaskId AS intMainId,
             CAST(TIME_FORMAT(SEC_TO_TIME(timDurationTotTask), '%H:%i') AS CHAR(8)) AS timDurationTotMain,
@@ -1576,12 +1458,8 @@ class Report {
             intTaskId, intProjectId 
           ORDER BY
             $strOrderBy
-        ");
+        ")->fetchAll();
             
-        if (DB::isError($arrReport)) {
-            raiseError($arrReport->getMessage());
-        }          
-        
         // clean temporary table
         $db->query('DROP TABLE report_task');
         
@@ -1591,7 +1469,7 @@ class Report {
     function getSumWorked($strUserId, $datStart, $datEnd) {
         global $db;
 
-        $strReport = $db->getOne("
+        $strReport = $db->query("
           SELECT
             TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(timDuration))), '%H:%i') AS timDurationTot           
           FROM sillaj_event
@@ -1603,11 +1481,7 @@ class Report {
 			  OR(sillaj_task.booUseInReport = '1'))
         ");
             
-        if (DB::isError($strReport)) {
-            raiseError($strReport->getMessage());
-        }  
-        
-        return $strReport; 
+        return $strReport->fetchColumn(); 
     }
 
 }
@@ -1763,17 +1637,14 @@ class User {
 			$data = array($_POST['strUserId'], $_POST['strPassword']);
         }        
 				
-		$res = $db->execute($hdlPrepare, $data);
-        if (DB::isError($res)) {
-            raiseError($res->getMessage());
-        }	
-		if ($res->numRows() == 0) {
+		$hdlPrepare->execute($data);
+		if ($hdlPrepare->rowCount() == 0) {
             raiseError(STR_NO_AUTHENT_SILLAJ);
         }
-        if ($res->numRows() > 1) {
+        if ($hdlPrepare->rowCount() > 1) {
             raiseError(STR_UNEXPECTED_AUTHENT_SILLAJ);
         }		
-		$res->fetchInto($arrAuthent);
+		$arrAuthent = $hdlPrepare->fetch();
 		        
         // remember values
         $_SESSION[    'strUserId'] = $arrAuthent['strUserId'];
@@ -1812,7 +1683,7 @@ class User {
         }
         else { // all names (for report.php)     
                
-            $arrUser = $db->getAssoc("
+            $arrUser = $db->query("
               SELECT
                 strUserId,
                 CONCAT(strUserId,' (', strName, ' ', strFirstname, ')')                               
@@ -1825,10 +1696,7 @@ class User {
                 strUserId   
             ");
             
-            if (DB::isError($arrUser)) {
-                raiseError($arrUser->getMessage());
-            }      
-            return $arrUser;
+            return fetchAssoc($arrUser);
         }
         
         if ($strUserId != '') {
@@ -1843,7 +1711,7 @@ class User {
         }     
             
         // query        
-        $arrUser = $db->getAll('
+        $arrUser = $db->query('
           SELECT
             strUserId,
             strName,
@@ -1861,11 +1729,8 @@ class User {
             strName,
             strFirstname,
             strUserId
-        ');
+        ')->fetchAll();
         
-        if (DB::isError($arrUser)) {
-            raiseError($arrUser->getMessage());
-        }
         if (count($arrUser) == 1) {
             return $arrUser[0];
         }        
@@ -1949,9 +1814,6 @@ class User {
           )"
         );
         
-        if (DB::isError($arrUser)) {
-            raiseError($arrUser->getMessage());
-        }
         return STR_ACCOUNT_CREATED_SILLAJ;
     }
     
@@ -1982,10 +1844,6 @@ class User {
           WHERE
             (strUserId = '". $_SESSION['strUserId'] ."')"
         );
-        
-        if (DB::isError($arrUser)) {
-            raiseError($arrUser->getMessage());
-        }
         
         $_SESSION[      'strName'] = $arrInput['strName'];
         $_SESSION[ 'strFirstname'] = $arrInput['strFirstname'];
@@ -2026,17 +1884,14 @@ class User {
         
         $this->validEmail($strEmail);
         
-        $intRes = $db->getOne("
+        $intRes = $db->query("
           SELECT            
             COUNT(strEmail)       
           FROM sillaj_user 
           WHERE strEmail = '$strEmail'
           GROUP BY strEmail          
-        ");
+        ")->fetchColumn();
 
-        if (DB::isError($intRes)) {
-            raiseError($intRes->getMessage());
-        }
         if ($intRes == 0) {
             raiseError(STR_MAIL_ADDRESS_NOT_FOUND_SILLAJ .' : '. htmlspecialchars($_POST['strEmail']));
         }
@@ -2048,42 +1903,37 @@ class User {
     function resetPassword($strEmail, $booCommitNow = true) {
         global $db;
         
-        $strNewPassword = Sillaj::getRandom();
+        $strNewPassword = (new Sillaj)->getRandom();
 
         $strEmail = trim($strEmail);
         
         // Update accounts (note : several accounts can have the same email address)
-        $db->query('BEGIN');
-        $intRes = $db->query("
-          UPDATE sillaj_user 
-          SET strPassword = MD5('$strNewPassword')
-          WHERE strEmail = '$strEmail'
-        ");
-        
-        if (DB::isError($intRes)) {
-            $db->query('ROLLBACK');
-            raiseError($intRes->getMessage());
-        }
-        
-        // Select updated accounts (to mail new account information) 
-        // this result will be returned at the end of the function,
-        // to be inserted in the email (if $booCommitNow == false)
-        $intRes = $db->getAll("
-          SELECT
-            strUserId,
-            '$strNewPassword' AS strPassword
-          FROM
-            sillaj_user           
-          WHERE strEmail = '$strEmail'
-        ");
-        
-        if (DB::isError($intRes)) {
-            $db->query('ROLLBACK');
-            raiseError($intRes->getMessage());
-        }
-        
-        if ($booCommitNow) {
-            $db->query('COMMIT');
+        try {
+            $db->beginTransaction();
+            $db->query("
+              UPDATE sillaj_user 
+              SET strPassword = MD5('$strNewPassword')
+              WHERE strEmail = '$strEmail'
+            ");
+            
+            // Select updated accounts (to mail new account information) 
+            // this result will be returned at the end of the function,
+            // to be inserted in the email (if $booCommitNow == false)
+            $intRes = $db->query("
+              SELECT
+                strUserId,
+                '$strNewPassword' AS strPassword
+              FROM
+                sillaj_user           
+              WHERE strEmail = '$strEmail'
+            ")->fetchAll();
+            
+            if ($booCommitNow) {
+                $db->commit();
+            }
+        }catch(Exception $e) {
+            $db->rollback();
+            throw $e;
         }
 
         return $intRes;    
@@ -2099,28 +1949,6 @@ class User {
     }
     
 } // end class Authent
-
-/******************************************************************************/
-/**
- * Get the last id inserted in the database ; we don't use PEAR DB::lastId() (?)
- * because on MySQL it adds a table in the database to track the id. Not
- * very clean (and possible user rights pb ?). Our solution is maybe not very portable though...
- * (should work in MySQL, Sybase, SQL Server (?)...)
- */
-class DBSillaj extends DB {
-    
-    function lastId() {
-        global $db;
-        
-        $intMax = $db->GetOne("SELECT @@IDENTITY");
-        if (DB::isError($intMax)) {
-            raiseError($intMax->getMessage());
-        }
-
-        return $intMax;
-    }
-    
-} // end class DBSillaj
 
 /******************************************************************************/
 /**

@@ -93,9 +93,14 @@ else {
     error_reporting(0);
 }
 
+function exc_handler($ex){
+	raiseError($ex->getMessage());
+}
+set_exception_handler('exc_handler');
+
 // Main classes
-require(FN_ROOT_DIR_SILLAJ .'lib/smarty/Smarty.class.php');
-require(FN_ROOT_DIR_SILLAJ .'lib/pear/DB.php');
+require("Smarty.class.php");
+//require(FN_ROOT_DIR_SILLAJ .'lib/smarty/Smarty.class.php');
 require('sillaj.class.php');
 
 // Start the session and will populate the $_SESSION variable with information on the
@@ -165,11 +170,15 @@ if (BOO_TEMPLATE_NOT_FOUND_SILLAJ) { // defined in SmartySillaj::smartySillaj()
 // Database connectivity with PEAR::DB
 // the $db variable will be used as a global variable in all functions in 
 // sillaj.class.php
-$db = DB::connect(STR_DB_TYPE_SILLAJ .'://'. STR_DB_USER_SILLAJ .':'. STR_DB_PASS_SILLAJ .'@'. STR_DB_HOST_SILLAJ .'/'. STR_DB_DATABASE_SILLAJ);
-if (DB::isError($db)) {
-    raiseError($db->getMessage());
+try {
+	$db = new PDO(STR_DB_TYPE_SILLAJ .':host=' .STR_DB_HOST_SILLAJ .';dbname='. STR_DB_DATABASE_SILLAJ,
+		STR_DB_USER_SILLAJ, STR_DB_PASS_SILLAJ);
+   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+   $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    raiseError($e->getMessage());
 }
-$db->setFetchMode(DB_FETCHMODE_ASSOC);
 
 /**
 * Simple error manager

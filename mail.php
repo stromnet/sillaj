@@ -54,11 +54,11 @@ else {
     $mail->Body = $strBody ."\nhttp://". $_SERVER['SERVER_NAME'] . URL_ROOT_DIR_SILLAJ;
     
     // Send message
-    if(!$mail->Send()) {
-    	$db->query('ROLLBACK');
+    if(!$mail->send()) {
+    	$db->rollback();
         raiseError(STR_MAIL_ERROR_SILLAJ .' '. $mail->ErrorInfo);
     }
-    $db->query('COMMIT');
+    $db->commit();
     $smarty->assign('strPageTitle', STR_MAIL_PAGE_TITLE_SILLAJ);
     displayMessage(STR_MAIL_SUCCESS_SILLAJ .' '. htmlspecialchars($_POST['strEmail']));
 }
