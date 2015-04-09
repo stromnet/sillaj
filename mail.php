@@ -26,12 +26,13 @@ else {
     $arrNewLogin = $user->resetPassword($_POST['strEmail'], false); 
     
     // Prepare mail with PHPMailer
-    require(FN_ROOT_DIR_SILLAJ .'lib/phpmailer/class.phpmailer.php');    
+    require(FN_ROOT_DIR_SILLAJ .'lib/phpmailer/PHPMailerAutoload.php');    
     $mail = new PHPMailer();
     
     $mail->SetLanguage($_SESSION['strLocale'], FN_ROOT_DIR_SILLAJ .'lib/phpmailer/language/');
-    $mail->IsSMTP();                      // telling the class to use SMTP
+    $mail->isSMTP();                      // telling the class to use SMTP
     $mail->Host = STR_MAIL_SERVER_SILLAJ; // SMTP server
+    $mail->Port = STR_MAIL_PORT_SILLAJ; // SMTP port
     
     if (BOO_MAIL_SMTP_AUTHENT_SILLAJ) {
         $mail->SMTPAuth = true;                          // turn on SMTP authentication
@@ -42,7 +43,7 @@ else {
     // Build message
     $mail->From = STR_ADMIN_EMAIL_SILLAJ;    
     $mail->FromName = STR_SITE_NAME_SILLAJ;
-    $mail->AddAddress($_POST['strEmail']);    
+    $mail->addAddress($_POST['strEmail']);    
     $mail->Subject = '['. STR_SITE_NAME_SILLAJ .'] '. STR_MAIL_SUBJECT_SILLAJ;
     $strBody = $_POST['strEmail'] .",\n";
 	

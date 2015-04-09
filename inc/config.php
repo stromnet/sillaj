@@ -43,6 +43,7 @@ define(          'STR_DB_HOST_SILLAJ', 'localhost');
 
 // Mail parameters ; used to send a new password if the user forgot his.
 define(       'STR_MAIL_SERVER_SILLAJ', 'smtp.example.com'); // The mail server used to send mail
+define(        'STR_MAIL_PORT_SILLAJ', '25'); 					 // The server port used to send mail
 define( 'BOO_MAIL_SMTP_AUTHENT_SILLAJ', false);              // The mail server needs SMTP authentication ?
 define(   'STR_MAIL_SMTP_LOGIN_SILLAJ', 'login');            // SMTP authentication login (if BOO_MAIL_SMTP_LOGIN_SILLAJ == true)
 define('STR_MAIL_SMTP_PASSWORD_SILLAJ', 'password');         // SMTP authentication password (if BOO_MAIL_SMTP_LOGIN_SILLAJ == true)
