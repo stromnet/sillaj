@@ -1148,7 +1148,7 @@ class Event {
      * output is hh:mm:ss
      */
     function createMaketime($input) {
-        $arrMaketime = split("[-:,;[:space:]]", $input);
+        $arrMaketime = preg_split("/[-:,;[:space:]]/", $input);
         $strMaketime = '';
         
         for ($i=0;$i<3;$i++) {
@@ -1275,11 +1275,11 @@ class Event {
         }
         
         // Add leading 0 for the next comparison
-        list($h, $m) = split('[-:,; ]', $s);
+        list($h) = preg_split('/[-:,; ]/', $s);
         $o = strlen($h) == 1 ? '0' : '';
         $s = $o . $s;
         
-        list($h, $m) = split('[-:,; ]', $e);
+        list($h) = preg_split('/[-:,; ]/', $e);
         $o = strlen($h) == 1 ? '0' : '';
         $e = $o . $e;
         
@@ -2010,7 +2010,7 @@ class User {
      */
     function validEmail($strEmail) {
         // http://www.iki.fi/markus.sipila/pub/emailvalidator.php
-        if (!eregi("^[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$", $strEmail)) {
+        if (!preg_match("/^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/", $strEmail)) {
             raiseError(STR_MAIL_INVALID_ADDRESS_SILLAJ .' : '. htmlspecialchars($strEmail));
         }	
         return true;

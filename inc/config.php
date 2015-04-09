@@ -222,7 +222,8 @@ function displayMessage($strMessage) {
  * Check ISO date as valid
  */
 function validIsoDate($datIso) {
-	if (!ereg("([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})", $datIso, $arrIso) || !checkdate($arrIso[2], $arrIso[3], $arrIso[1])) {		
+	if (!preg_match("/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/", $datIso, $arrIso) ||
+		 !checkdate($arrIso[2], $arrIso[3], $arrIso[1])) {
 	    raiseError(STR_BAD_DATE_SILLAJ .' : '. $datIso);
 	}
 	else {
@@ -277,9 +278,8 @@ function dateFormatPhpToJsCal($strDateFormat) {
  * Use in Smarty template : {$myTimestamp|date_format_w3cdtf}
  * or in PHP code like the date() function
  */
-define('TS_NOW_SILLAJ', mktime());
+define('TS_NOW_SILLAJ', time());
 function date_format_w3cdtf($ts = TS_NOW_SILLAJ) {
     return date("Y-m-d\\TH:i:s", $ts) . substr_replace(date('O', $ts), ':', 3, 0);  // calcul du décalage GMT    
 }
 $smarty->register_modifier('date_format_w3cdtf', 'date_format_w3cdtf');
-?>
