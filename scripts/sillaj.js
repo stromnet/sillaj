@@ -28,10 +28,11 @@ function frmEvent_intProjectId_onchange(s) {
     xmlhttp.open('GET', 'getTask_xmlhttp.php?intProjectId=' + s.options[s.selectedIndex].value);
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {  
-            eval(xmlhttp.responseText);
+            var arrXmlhttp = JSON.parse(xmlhttp.responseText);
             element.options.length = 0;
-            for (i=0;i<arrXmlhttp.length;i++) {
-                o = new Option(arrXmlhttp[i][1], arrXmlhttp[i][0]);
+            for (var taskId in arrXmlhttp) {
+                var strTask = arrXmlhttp[taskId];
+                o = new Option(strTask, taskId);
                 element.options[element.options.length] = o;
             }
         }

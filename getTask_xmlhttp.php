@@ -6,8 +6,8 @@
 
 require('./inc/config.php');
 $user->checkAuthent();
-header('Content-Type: text/javascript; charset='. STR_CHARSET_SILLAJ);
+header('Content-Type: application/json; charset='. STR_CHARSET_SILLAJ);
 
 $project = new Project;
-$smarty->assign('arrTask', $project->getTask($_GET['intProjectId'], true));
-$smarty->display('frmEvent_taskOption.tpl');
+print json_encode($project->getTask($_GET['intProjectId'], true));
+
